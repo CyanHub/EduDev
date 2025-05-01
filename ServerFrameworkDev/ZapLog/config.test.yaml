@@ -3,7 +3,7 @@ MySQL:
   Port: 3306
   User: root
   Password: 292378
-  Database: test
+  Database: test_db
   Charset: utf8mb4
   Config: sslmode=disable TimeZone=Asia/Shanghai
 App:
