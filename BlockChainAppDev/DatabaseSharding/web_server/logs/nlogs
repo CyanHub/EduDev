@@ -1,0 +1,56 @@
+{"level":"info","created_at":"2025-03-11T10:46:17.222+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-03-11T11:04:17.578+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-03-11T11:09:03.203+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-03-11T11:10:06.885+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-03-11T11:21:51.117+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-03-11T11:29:42.366+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-01T11:26:18.661+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"error","created_at":"2025-04-01T11:26:18.669+0800","caller":"redisdb/Redisdb.go:22","message":"连接 Redis 失败: ERR Client sent AUTH, but no password is set"}
+{"level":"info","created_at":"2025-04-01T11:28:48.168+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-01T11:28:48.175+0800","caller":"redisdb/Redisdb.go:24","message":"成功连接到 Redis"}
+{"level":"info","created_at":"2025-04-01T11:54:49.119+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-01T11:54:49.119+0800","caller":"redisdb/Redisdb.go:24","message":"成功连接到 Redis"}
+{"level":"error","created_at":"2025-04-01T11:54:54.123+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'redpack_id' in 'field list'"}
+{"level":"error","created_at":"2025-04-01T11:54:59.123+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'redpack_id' in 'field list'"}
+{"level":"error","created_at":"2025-04-01T11:55:04.121+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'redpack_id' in 'field list'"}
+{"level":"error","created_at":"2025-04-01T11:55:09.122+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'redpack_id' in 'field list'"}
+{"level":"error","created_at":"2025-04-01T11:55:14.124+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'redpack_id' in 'field list'"}
+{"level":"error","created_at":"2025-04-01T11:55:19.122+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'redpack_id' in 'field list'"}
+{"level":"error","created_at":"2025-04-01T11:55:24.122+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'redpack_id' in 'field list'"}
+{"level":"error","created_at":"2025-04-01T11:55:29.124+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'redpack_id' in 'field list'"}
+{"level":"error","created_at":"2025-04-01T11:55:34.123+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'redpack_id' in 'field list'"}
+{"level":"info","created_at":"2025-04-01T11:57:55.333+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-01T11:57:55.334+0800","caller":"redisdb/Redisdb.go:24","message":"成功连接到 Redis"}
+{"level":"error","created_at":"2025-04-01T11:58:00.336+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'user_id' in 'field list'"}
+{"level":"error","created_at":"2025-04-01T11:58:05.336+0800","caller":"produce_redpack/produce_redpack.go:35","message":"生成红包失败: Error 1054 (42S22): Unknown column 'user_id' in 'field list'"}
+{"level":"info","created_at":"2025-04-01T11:58:19.171+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-01T11:58:19.172+0800","caller":"redisdb/Redisdb.go:24","message":"成功连接到 Redis"}
+{"level":"info","created_at":"2025-04-01T11:58:24.815+0800","caller":"produce_redpack/produce_redpack.go:38","message":"生成红包成功 id=>16"}
+{"level":"info","created_at":"2025-04-01T11:58:29.197+0800","caller":"produce_redpack/produce_redpack.go:38","message":"生成红包成功 id=>17"}
+{"level":"info","created_at":"2025-04-01T11:58:34.513+0800","caller":"produce_redpack/produce_redpack.go:38","message":"生成红包成功 id=>18"}
+{"level":"info","created_at":"2025-04-01T11:58:39.188+0800","caller":"produce_redpack/produce_redpack.go:38","message":"生成红包成功 id=>19"}
+{"level":"info","created_at":"2025-04-01T11:58:44.195+0800","caller":"produce_redpack/produce_redpack.go:38","message":"生成红包成功 id=>20"}
+{"level":"info","created_at":"2025-04-01T11:58:49.188+0800","caller":"produce_redpack/produce_redpack.go:38","message":"生成红包成功 id=>21"}
+{"level":"info","created_at":"2025-04-01T11:58:54.187+0800","caller":"produce_redpack/produce_redpack.go:38","message":"生成红包成功 id=>22"}
+{"level":"info","created_at":"2025-04-01T11:58:59.182+0800","caller":"produce_redpack/produce_redpack.go:38","message":"生成红包成功 id=>23"}
+{"level":"info","created_at":"2025-04-01T11:59:04.191+0800","caller":"produce_redpack/produce_redpack.go:38","message":"生成红包成功 id=>24"}
+{"level":"info","created_at":"2025-04-08T10:40:58.173+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-08T10:40:58.174+0800","caller":"redisdb/Redisdb.go:24","message":"成功连接到 Redis"}
+{"level":"info","created_at":"2025-04-08T11:12:20.454+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-08T11:13:51.139+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"error","created_at":"2025-04-08T11:13:51.141+0800","caller":"mysqldb/mysqldb.go:48","message":"连接mysql数据库失败：dial tcp 127.0.0.1:3306: connectex: Only one usage of each socket address (protocol/network address/port) is normally permitted."}
+{"level":"info","created_at":"2025-04-08T11:17:41.625+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-08T11:18:30.304+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"error","created_at":"2025-04-08T11:18:30.307+0800","caller":"mysqldb/mysqldb.go:48","message":"连接mysql数据库失败：dial tcp 127.0.0.1:3306: connectex: Only one usage of each socket address (protocol/network address/port) is normally permitted."}
+{"level":"info","created_at":"2025-04-08T11:18:40.104+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-08T11:19:38.143+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-08T11:20:31.891+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-08T11:21:25.007+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-08T11:22:25.232+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-08T11:23:59.311+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-08T11:26:26.157+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-08T11:37:43.133+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"error","created_at":"2025-04-08T11:37:43.200+0800","caller":"redisdb/Redisdb.go:22","message":"连接 Redis 失败: dial tcp 127.0.0.1:6379: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"info","created_at":"2025-04-11T15:28:09.869+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-11T15:33:25.952+0800","caller":"logs/log.go:61","message":"log server start"}
+{"level":"info","created_at":"2025-04-11T15:33:25.958+0800","caller":"redisdb/Redisdb.go:24","message":"成功连接到 Redis"}
