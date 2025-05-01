@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+// 定义包名
+option go_package = "./;chat_service";
+//package chat_service;
+
+// 用户信息
+message User {
+  string user_id = 1;
+  string username = 2;
+}
+
+// 加好友请求
+message AddFriendRequest {
+  User requester = 1;
+  User target = 2;
+}
+
+// 加好友响应
+message AddFriendResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// 好友聊天消息
+message FriendChatMessage {
+  User sender = 1;
+  User receiver = 2;
+  string content = 3;
+  int64 timestamp = 4;
+}
+
+// 聊天信息
+message ChatMessage {
+  int64   MsgId = 1;
+  int64   ToGroupId = 2;
+  int64   SendMsgUserId = 3;
+  int32   MsgType = 4;
+  string  MsgContent = 5;
+  string  MsgSendTime = 6;
+  string  Ext = 7;
+}
+// 群信息
+message Group {
+  string   group_id = 1;
+  string   group_name = 2;
+  repeated User members = 3;
+}
+
+// 群聊消息
+message GroupChatMessage {
+  User   sender = 1;
+  Group  group = 2;
+  string content = 3;
+  int64  timestamp = 4;
+}
+
+// 退群请求
+message LeaveGroupRequest {
+  User user = 1;
+  Group group = 2;
+}
+
+// 退群响应
+message LeaveGroupResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+//// 定义服务
+//service ChatService {
+//  // 加好友服务
+//  rpc AddFriend(AddFriendRequest) returns (AddFriendResponse);
+//  // 发送好友聊天消息
+//  rpc SendFriendChatMessage(FriendChatMessage) returns (google.protobuf.Empty);
+//  // 发送群聊消息
+//  rpc SendGroupChatMessage(GroupChatMessage) returns (google.protobuf.Empty);
+//  // 退群服务
+//  rpc LeaveGroup(LeaveGroupRequest) returns (LeaveGroupResponse);
+//}
