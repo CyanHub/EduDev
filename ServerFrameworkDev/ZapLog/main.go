@@ -15,5 +15,3 @@ func main() {
 	//initialize.MustInitRedis()
 	initialize.MustRunWindowServer()
 }
-
-// 小小的修改，测试一下
