@@ -1,0 +1,10 @@
+MySQL:
+  Host: localhost
+  Port: 3306
+  User: root
+  Password: 292378
+  Database: test
+  Charset: utf8mb4
+  Config: sslmode=disable TimeZone=Asia/Shanghai
+App:
+  Port: 8080
