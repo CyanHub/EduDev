@@ -1,7 +1,0 @@
-{"level":"info","created_at":"2025-03-11T10:46:17.222+0800","caller":"logs/log.go:61","message":"log server start"}
-{"level":"info","created_at":"2025-03-11T11:04:17.578+0800","caller":"logs/log.go:61","message":"log server start"}
-{"level":"info","created_at":"2025-03-11T11:09:03.203+0800","caller":"logs/log.go:61","message":"log server start"}
-{"level":"info","created_at":"2025-03-11T11:10:06.885+0800","caller":"logs/log.go:61","message":"log server start"}
-{"level":"info","created_at":"2025-03-11T11:21:51.117+0800","caller":"logs/log.go:61","message":"log server start"}
-{"level":"info","created_at":"2025-03-11T11:29:42.366+0800","caller":"logs/log.go:61","message":"log server start"}
-{"level":"info","created_at":"2025-03-13T15:05:09.674+0800","caller":"logs/log.go:61","message":"log server start"}

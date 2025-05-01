@@ -1,11 +1,7 @@
-# 学习开发 edu
-在这里最主要是将自己在课堂上学到的知识和实验项目放到GitHub上，
-一是方便自己随时通过不同的设备进行查看，二是在条件允许的情况下以便不时之需
-当前主要用**Go语言**进行开发
-目前有**区块链分布式应用开发**、**服务器框架开发**、以及**智能合约开发**
+# Zap日志管理
 
-# Education and Development edu
-The most important thing here is to put the knowledge and experimental projects learned in class on GitHub.
-First, it is convenient for you to view them at any time through different devices, and second, it is for emergency use when conditions permit.
-Currently, it is mainly developed in **Go language**.
-Currently, there are **blockchain distributed application development**, **server framework development**, and **smart contract development**
+在现代软件开发中，日志管理是至关重要的环节。它不仅帮助开发者追踪程序的执行过程，定位和解决问题，还为系统的监控和优化提供了重要依据。Golang 的 Zap 日志库以其高性能和灵活性，成为众多开发者的首选。本讲义将深入探讨 Zap 日志管理的核心概念、实践应用以及高级技巧，帮助大家全面掌握日志管理的艺术。
+
+## 实验内容概要
+
+这里面主要是通过ApiFox的配合，结合自身开发的各类包，再通过伪用户注册以及登录的各项正确或错误操作，来进行日志输出，从而实现自动生成日志Logs的目的。
