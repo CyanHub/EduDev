@@ -23,6 +23,11 @@ func AutoMigrate(db *gorm.DB) error {
 
 func MustInitDB() {
 	sqlDB, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/test?charset=utf8mb4&parseTime=True&loc=Local")
+	// mssql是数据库类型，user是用户名这里是root，
+	// password是密码和用户名用:相连接，这里是123456，
+	// ip是数据库地址，这里是localhost，port是端口，这里是3306，test_db是数据库名称，
+	// charset=utf8mb4&parseTime=True&loc=Local是数据库连接参数
+	if err != nil {
 	if err != nil {
 		panic(err)
 	}
