@@ -32,6 +32,8 @@ func Login(c *gin.Context) {
 		} else {
 			log.Println("登录失败: ", err)
 			response.FailWithMessage("登录失败", c)
+//添加相关问题说明，便于用户理解
+  fmt.println("请重新输入相关数据")
 			return
 		}
 	}
