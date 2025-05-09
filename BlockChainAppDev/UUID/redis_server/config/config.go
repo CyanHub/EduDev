@@ -83,7 +83,8 @@ var (
 func Init() {
 	// todo read the configs.json file
 	v := viper.New()
-	v.SetConfigFile("../config/config.yaml") // 这里是最需要注意的，不同的编译器工具对前缀的匹配度不同，需要根据自己的编译器来调整
+	v.SetConfigFile("../config/config.yaml") 
+	// 这里是最需要注意的，不同的编译器工具对前缀的匹配度不同，需要根据自己的编译器来调整
 	err := v.ReadInConfig()
 	if err != nil {
 		// todo log error to be handle with unity
