@@ -2,15 +2,17 @@ package api
 
 import (
 	"errors"
-	"go.uber.org/zap"
+	"fmt"
 	"log"
+
+	"go.uber.org/zap"
 
 	"github.com/CyanHub/EduDev/global"
 	"github.com/CyanHub/EduDev/model"
 	"github.com/CyanHub/EduDev/model/request"
 	"github.com/CyanHub/EduDev/model/response"
-	"github.com/CyanHub/EduDev/utils"
 	"github.com/CyanHub/EduDev/service"
+	"github.com/CyanHub/EduDev/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,8 +34,8 @@ func Login(c *gin.Context) {
 		} else {
 			log.Println("登录失败: ", err)
 			response.FailWithMessage("登录失败", c)
-//添加相关问题说明，便于用户理解
-  fmt.println("请重新输入相关数据")
+			//添加相关问题说明，便于用户理解
+			fmt.Println("请重新输入相关数据")
 			return
 		}
 	}
