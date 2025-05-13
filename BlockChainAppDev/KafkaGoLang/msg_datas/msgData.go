@@ -1,18 +1,16 @@
 package msg_datas
 
-const Msg_hello_id int64 = 1001          // 消息id
-const Topic_hello string = "topic_hello" // 消息主题
+// const Topic_hello string = "topic_hello"
+const Topic_progress string = "progress"
 
-// 消息结构
 type BaseMsg struct {
-    MsgId   int64  `json:"msg_id" bson:"msg_id"`
-    MsgData string `json:"msg_data" bson:"msg_data"` // 消息具体内容
+	MsgId   int    `json:"msg_id,omitempty"`
+	MsgData string `json:"msg_data"`
 }
 
-// 要生产的消息结构体
 type ProduceMsg struct {
-    ToUid   string `json:"to_uid" bson:"to_uid"`     // 接收者id
-    SendUid string `json:"send_uid" bson:"send_uid"` // 发送者id
-    MsgType int    `json:"msg_type" bson:"msg_type"` // 消息类型
-    Content string `json:"content" bson:"content"`   // 消息内容
+	ToUid   string `json:"to_uid,omitempty"`
+	SendUid string `json:"send_uid,omitempty"`
+	MsgType int    `json:"msg_type,omitempty" ` // 消息类型
+	Content string `json:"content,omitempty"`
 }

@@ -1,79 +1,97 @@
-package kafka_tool_test
+package kafka
 
 import (
-	// "fmt"
+	"BlockChainDev/config"
+	"context"
+	"fmt"
+	"time"
 
 	"github.com/IBM/sarama"
 )
 
 type KafkaProducer struct {
-	Producer sarama.SyncProducer // kafka生产者
+	Producer sarama.SyncProducer
 }
 
 type KafkaConsumer struct {
-	Consumer             sarama.Consumer             // kafka消费者
-	ConsumerGroup        sarama.ConsumerGroup        // kafka消费者组
-	ConsumerGroupSession sarama.ConsumerGroupSession // kafka消费者组会话
-	ConsumerGroupClaim   sarama.ConsumerGroupClaim   // kafka消费者组声明
+	Consumer      sarama.Consumer
+	ConsumerGroup sarama.ConsumerGroup
 }
 
 type KafkaTool struct {
-	Brokers       []string       `json:"brokers,omitempty"` // broker地址列表，多个地址用逗号分隔
-	Config        sarama.Config  // kafka配置项
-	KafkaProducer *KafkaProducer // kafka生产者
-	KafkaConsumer *KafkaConsumer // kafka消费者
+	Brokers       []string `json:"brokers,omitempty"`
+	Config        *sarama.Config
+	KafkaProducer *KafkaProducer
+	KafkaConsumer *KafkaConsumer
 }
 
-// func NewKafkaTool() {
-// 	kt := &KafkaTool{}
-// 	brokers := make([]string, 0) // broker地址列表，多个地址用逗号分隔
-// 	brokers = append(brokers, config.CONFIG.Kafka.Host+":"+config.CONFIG.Kafka.Port)
-// 	kt.Brokers = brokers
+func NewKafkaTool() *KafkaTool {
+	kt := &KafkaTool{}
+	brokers := make([]string, 0)
+	brokers = append(brokers, config.CONFIG.Kafka.Host+":"+config.CONFIG.Kafka.Port)
+	kt.Brokers = brokers
 
-// 	kafkaConfig := sarama.NewConfig()                              // kafka配置项
-// 	kafkaConfig.Producer.RequiredAcks = sarama.WaitForAll          // 等待所有副本都收到消息
-// 	kafkaConfig.Producer.Compression = sarama.CompressionSnappy    // 压缩消息
-// 	kafkaConfig.Producer.Partitioner = sarama.NewRandomPartitioner // 随机分区
-// 	kafkaConfig.Producer.Return.Successes = true                   // 成功返回
-// 	kafkaConfig.Producer.Return.Errors = true                      // 失败返回
-// 	kafkaConfig.Consumer.Return.Errors = true                      // 失败返回
-// 	kt.Config = *kafkaConfig                                       // kafka配置项
+	kafkaConfig := sarama.NewConfig()
+	kafkaConfig.Producer.RequiredAcks = sarama.WaitForAll
+	kafkaConfig.Producer.Compression = sarama.CompressionSnappy
+	kafkaConfig.Producer.Partitioner = sarama.NewRandomPartitioner
+	kafkaConfig.Producer.Return.Successes = true
+	kafkaConfig.Producer.Return.Errors = true
+	// 从最新的消息开始消费
+	kafkaConfig.Consumer.Offsets.Initial = sarama.OffsetNewest
+	// 开启自动提交偏移量，设置提交间隔
+	kafkaConfig.Consumer.Offsets.AutoCommit.Enable = true
+	kafkaConfig.Consumer.Offsets.AutoCommit.Interval = 1 * time.Second
+	kt.Config = kafkaConfig
 
-// 	KafkaProducer := &KafkaProducer{} // kafka生产者
-// 	producer, err := sarama.NewSyncProducer(Brokers, kafkaConfig)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	KafkaConsumer.Consumer = consumer
-// 	return kt
-// }
+	// Create a KafkaProducer instance
+	kafkaProducer := &KafkaProducer{}
+	producer, err := sarama.NewSyncProducer(brokers, kafkaConfig)
+	if err != nil {
+		panic(err)
+	}
+	kafkaProducer.Producer = producer
+	// 将KAFKAPRODUCER实例分配到Kafkatool结构
+	kt.KafkaProducer = kafkaProducer
 
-// func (kt *KafkaTool) AddConsumeHandler(groupID string, topics []string, handler sarama.ConsumerGroupHandler) error {
-// 	// 创建消费者组
-// 	consumerGroup, err := sarama.NewConsumerGroup(kt.Brokers, groupID, &kt.Config)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	kt.KafkaConsumer.ConsumerGroup = consumerGroup
+	// 创建一个kafkaconsumer实例
+	kafkaConsumer := &KafkaConsumer{}
+	consumer, err := sarama.NewConsumer(brokers, kafkaConfig)
+	if err != nil {
+		panic(err)
+	}
+	kafkaConsumer.Consumer = consumer
+	// 将kafkaconsumer实例分配到kafkatool struct
+	kt.KafkaConsumer = kafkaConsumer
 
-// 	// 启动消费者组
-// 	for {
-// 		err := consumerGroup.Consume(context.Background(), topics, handler)
-// 		if err != nil {
-// 			fmt.Println("Error from consumer:", err)
-// 		}
-// 	}
-// }
+	return kt
+}
 
-// func (kt *KafkaTool) ProduceMsg(topic string, msg string) error {
-// 	saramaMessage := &sarama.ProducerMessage{ // 消息结构
-// 		Topic: topic, // 消息主题
-// 		Value: sarama.StringEncoder(msg), // 消息具体内容
-// 	}
-// 	partition, offset, err := kt.KafkaProducer.Producer.SendMessage(saramaMessage) // 发送消息
-// 	if err!= nil {
-// 		fmt.Println("发送消息失败:", err)
-// 		return 
-// 	}
-// 	fmt.Printf("消息发送成功，分区: %d, 偏移量: %d\n", partition, offset)
-// }
+func (kt *KafkaTool) AddConsumeHandler(groupID string, topics []string, handler sarama.ConsumerGroupHandler) {
+	consumerGroup, err := sarama.NewConsumerGroup(kt.Brokers, groupID, kt.Config)
+	if err != nil {
+		panic(err)
+	}
+	kt.KafkaConsumer.ConsumerGroup = consumerGroup
+	for {
+		err = consumerGroup.Consume(context.Background(), topics, handler)
+		if err != nil {
+			fmt.Println("消息信息错误：", err)
+		}
+	}
+}
+func (kt *KafkaTool) ProduceMsg(topic string, message string) {
+	saramaMessage := &sarama.ProducerMessage{
+		Topic: topic,
+		Value: sarama.StringEncoder(message), // 将消息内容编码为字符串
+	}
+	// 使用生产者发送消息并获取消息的分区和偏移
+	partition, offset, err := kt.KafkaProducer.Producer.SendMessage(saramaMessage)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("Produced message:", saramaMessage)
+	// 输出成功发送的分区和偏移信息
+	fmt.Printf("Partition: %d, Offset: %d\n", partition, offset)
+}

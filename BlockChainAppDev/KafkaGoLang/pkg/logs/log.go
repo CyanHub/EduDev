@@ -56,17 +56,17 @@ func InitLogger(_logTypes []string, _logPath string, _logEnv LogEnvType, _saveDa
 		}
 	}
 	tee := zapcore.NewTee(cores...)
-	// logger Output identification of calling code line.
+	// 记录器输出识别呼叫代码线的标识。
 	ZapLogger = zap.New(tee, zap.AddCaller())
-	ZapLogger.Info("log server start")
+	ZapLogger.Info("日志服务启动成功")
 }
 
 func CloseLog() {
 	err := ZapLogger.Sync()
 	if err != nil {
-		err = errors.Wrap(err, "Failed to close the log.")
+		err = errors.Wrap(err, "日志关闭失败.")
 		if err != nil {
-			log.Printf("Failed to close the log: %v", err)
+			log.Printf("日志关闭失败: %v", err)
 		}
 	}
 }
@@ -90,7 +90,7 @@ func getFileCore() zapcore.Core {
 		if os.IsNotExist(err) {
 			err = os.MkdirAll(dir, 0o777)
 			if err != nil {
-				err = errors.Wrap(err, "Failed to create log directory.")
+				err = errors.Wrap(err, "无法创建日志目录。")
 				panic(err)
 			}
 		}
@@ -98,7 +98,7 @@ func getFileCore() zapcore.Core {
 
 	err = os.Chmod(dir, 0o777)
 	if err != nil {
-		err = errors.Wrap(err, "Failed to modify log directory permissions.")
+		err = errors.Wrap(err, "无法修改日志目录权限。")
 		panic(err)
 	}
 
@@ -135,7 +135,7 @@ func getConfig() zapcore.Encoder {
 		productionEncoderConfig.TimeKey = "created_at"
 		encoder = zapcore.NewJSONEncoder(productionEncoderConfig)
 	default:
-		panic(errors.Errorf("unknow env value:%s,please fix it", logEnv))
+		panic(errors.Errorf("未知的环境变量值:%s，请修复它", logEnv))
 	}
 	return encoder
 }

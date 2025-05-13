@@ -1,7 +1,7 @@
 version: '1.0.0'
 
 system:
-  port: "8188"
+  port: "8080"
   mode: "debug" #release
 
 logger:
@@ -18,7 +18,7 @@ mysql:
   host: "127.0.0.1"
   port: "3306"
   database: "godist_segmentsids"
-  user: "dev"
+  user: "root"
   Password: "123456"
   maxIdleConns: 10 # 连接池最大空闲连接数
   maxOpenConns: 50 # 连接池最大打开连接数
@@ -26,9 +26,11 @@ mysql:
 redis:
   host: "127.0.0.1"
   port: "6379"
-  database: "godist_segmentsids"
-  password: ""
-#  password: "cs_123456"
+  database: "0"
+
+kafka:
+  host: "127.0.0.1"
+  port: "9092"
 
 #tls:
 #  enable: false

@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
@@ -39,9 +40,9 @@ type Kafka struct {
 	Port string `mapstructure:"port" json:"port"`
 }
 
-type ElasticSearch struct {
-	Host string `mapstructure:"host" json:"host"`
-}
+//type ElasticSearch struct {
+//	Host string `mapstructure:"host" json:"host"`
+//}
 
 // the system's info
 type System struct {
@@ -50,11 +51,11 @@ type System struct {
 }
 
 // tls
-type Tls struct {
-	Enable bool   `mapstructure:"enable" json:"enable"`
-	Cert   string `mapstructure:"cert" json:"cert"`
-	Key    string `mapstructure:"key" json:"key"`
-}
+//type Tls struct {
+//	Enable bool   `mapstructure:"enable" json:"enable"`
+//	Cert   string `mapstructure:"cert" json:"cert"`
+//	Key    string `mapstructure:"key" json:"key"`
+//}
 
 // logger
 type Logger struct {
@@ -72,6 +73,7 @@ type Config struct {
 	Redis  Redis  `mapstructure:"redis" json:"redis"`
 	System System `mapstructure:"system" json:"system"`
 	Logger Logger `mapstructure:"logger" json:"logger"`
+	Kafka  Kafka  `mapstructure:"kafka" json:"kafka"`
 }
 
 var (
@@ -81,26 +83,34 @@ var (
 
 // the init
 func Init() {
-	// todo read the configs.json file
-	v := viper.New()
-	v.SetConfigFile("../config/config.yaml") // 这里是最需要注意的，不同的编译器工具对前缀的匹配度不同，需要根据自己的编译器来调整
-	err := v.ReadInConfig()
+	// 获取当前工作目录
+	workingDir, err := os.Getwd()
 	if err != nil {
-		// todo log error to be handle with unity
+		panic(fmt.Sprintf("无法获取工作目录: %v", err))
+	}
+	// 拼接 config.yaml 文件的绝对路径
+	configPath := fmt.Sprintf("%s/../config/config.yaml", workingDir)
+
+	v := viper.New()
+	v.SetConfigFile(configPath)
+	err = v.ReadInConfig()
+	if err != nil {
+		// 待办事项符合统一的待办事项错误
 		fmt.Println(err)
 	}
 	v.WatchConfig()
 	v.OnConfigChange(func(e fsnotify.Event) {
-		fmt.Println("configs file changed:", e.Name)
+		fmt.Println("configs 文件已更改:", e.Name)
 		if err = v.Unmarshal(&CONFIG); err != nil {
-			// todo log error to be handle with unity
+			// 待办事项符合统一的待办事项错误
 			fmt.Println(err)
 		}
 	})
 
 	if err = v.Unmarshal(&CONFIG); err != nil {
-		// todo log error to be handle with unity
+		// 待办事项符合统一的待办事项错误
 		fmt.Println(err)
 	}
 	VP = v
+	fmt.Println(VP)
 }
