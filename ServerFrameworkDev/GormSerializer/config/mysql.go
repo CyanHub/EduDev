@@ -7,4 +7,5 @@ type MySQL struct {
 	Password string `json:"password"`
 	Database string `json:"database"`
 	Config   string `json:"config"`
+	CsvSep   string `json:"csv_sep"`
 }

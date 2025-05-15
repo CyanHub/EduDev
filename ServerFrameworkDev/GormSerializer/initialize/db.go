@@ -6,23 +6,22 @@ import (
 	"time"
 
 	"ServerFramework/global"
-	"ServerFramework/model"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-func AutoMigrate(db *gorm.DB) error {
-	return db.AutoMigrate(
-		&model.User{},
-		&model.Role{},
-		&model.OperationRecord{},
-		&model.Subject{},
-	)
-}
+//func AutoMigrate(db *gorm.DB) error {
+//	return db.AutoMigrate(
+//		&model.User{},
+//		&model.Role{},
+//		&model.OperationRecord{},
+//		&model.Subject{},
+//	)
+//}
 
 func MustInitDB() {
-	sqlDB, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/test_db?charset=utf8mb4&parseTime=True&loc=Local") 
+	sqlDB, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/test_db?charset=utf8mb4&parseTime=True&loc=Local")
 	// mssql是数据库类型，user是用户名这里是root，
 	// password是密码和用户名用:相连接，这里是123456，
 	// ip是数据库地址，这里是localhost，port是端口，这里是3306，test_db是数据库名称，

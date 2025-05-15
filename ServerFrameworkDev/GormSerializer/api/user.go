@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
-	"golang.org/x/net/websocket"
 
 	"ServerFramework/global"
 	"ServerFramework/model"
@@ -112,65 +112,62 @@ func UserList(c *gin.Context) {
 	}, c)
 }
 
-// // // // // //
-// type Message struct {
-// 	Type    string `json:"type"`
-// 	Content string `json:"content"`
-// }
-
 var clients = make(map[*websocket.Conn]string)
-var mu sync.Mutex
 
-var upgrader = websocket.upgrader{
-	HandShakeTimeout: 10 * time.Second,
+var mu sync.Locker
+
+var upgrader = websocket.Upgrader{
+	HandshakeTimeout: 10 * time.Second,
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
 }
 
 func OnlineTool(c *gin.Context) {
+
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		log.Println("建立WebSocket连接失败，失败的原因为：", err.Error())
-		// return
+		fmt.Println("建立websocket链接失败，失败的原因是", err.Error())
+
 	}
 	mu.Lock()
 	clients[conn] = conn.RemoteAddr().String()
 	mu.Unlock()
-	go HandleClienet(conn)
-
+	go HandleClient(conn)
 }
 
-func HandleClienet(conn *websocket.Conn) {
+func HandleClient(conn *websocket.Conn) {
 	defer func() {
 		conn.Close()
 		mu.Lock()
 		delete(clients, conn)
 		mu.Unlock()
-		// conn.Close()
 	}()
-
 	for {
+		// 1. 接收客户端的消息
 		_, data, err := conn.ReadMessage()
 		if err != nil {
-			log.Printf("建立%s连接失败，失败的原因为：%s\n", conn.RemoteAddr().String(), err.Error())
+			fmt.Printf("读取%s的消息失败，失败的原因是：%s\n", conn.RemoteAddr().String(), err.Error())
 			return
 		}
-		// 处理接收到的消息，广播出去(发送给所有客户端)
-		Broadcast(data)
+		// 2. 接收客户端的消息后，广播出去（发送给所有的客户端）
+		Broadcast(data, conn)
 	}
 }
 
-func Broadcast(data []byte, conn *websocket.Conn) {
+func Broadcast(data []byte, c *websocket.Conn) {
 	mu.Lock()
 	defer mu.Unlock()
 
 	for conn := range clients {
-		conn.WriteMessage(websocket.TextMessage, data)
-		err := nil
-		if err != nil {
-			fmt.Printf("向%s发送消息失败，失败的原因为：%s\n", conn.RemoteAddr().String(), err.Error())
-			continue
+		if c != conn {
+			err := conn.WriteMessage(websocket.TextMessage, data)
+			if err != nil {
+				fmt.Printf("向客户端%s发送雄安锡失败，失败的原因是：%s\n", conn.RemoteAddr().String(), err.Error())
+				continue
+			}
 		}
+
 	}
+
 }

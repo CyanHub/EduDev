@@ -15,7 +15,6 @@ import (
 func MustRunWindowServer() {
 	global.Cron = cron.New()
 	global.Cron.Start()
-	task.ClearOperationRecord("0/1 * * * * *")
 
 	engine := gin.Default()
 	userGroup := router.UserGroup{}
@@ -26,6 +25,10 @@ func MustRunWindowServer() {
 
 	address := fmt.Sprintf(":%d", global.CONFIG.App.Port)
 	fmt.Println("启动服务器，监听端口：", address)
+	global.Cron = cron.New(cron.WithSeconds())
+	global.Cron.Start()
+	task.AddClerOperationRecord(global.Cron)
+
 	go func() {
 		pprofAddress := ":6060" // 或者其他你想要的端口
 		fmt.Println("启动 pprof 服务，监听端口：", pprofAddress)
@@ -36,4 +39,5 @@ func MustRunWindowServer() {
 	if err := engine.Run(address); err != nil {
 		panic(err)
 	}
+
 }

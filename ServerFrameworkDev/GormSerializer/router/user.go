@@ -13,5 +13,5 @@ func (u *UserGroup) InitUserRouters(engine *gin.Engine) {
 	userRouters.POST("login", api.Login)
 	userRouters.POST("register", api.Register)
 	userRouters.POST("list", api.UserList)
-	userRouters.POST("update", api.UpdateUser)
+	// userRouters.POST("update", api.UpdateUser)
 }

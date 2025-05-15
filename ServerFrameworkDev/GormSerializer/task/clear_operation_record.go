@@ -1,5 +1,5 @@
 package task
 
-func ClearOperationRecord() error{
-	var OperationRecord
-}
+// func ClearOperationRecord() error{
+// 	var OperationRecord
+// }
