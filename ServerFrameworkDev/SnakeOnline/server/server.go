@@ -1,75 +1,144 @@
 package main
 
 import (
-	"bufio"
+	"ServerFrameWork/pkg"
+	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net"
 	"sync"
 )
 
-// 1.保存所有客户端信息
-// 2.接收客户端发送的消息
-// 3.将消息广播给其他客户端
-
-var (
-	clients = make(map[string]net.Conn) // 保存所有客户端信息（连接）
-	mu      sync.Mutex                  // 保护clients的读写操作
+const (
+	screenWidth  = 640
+	screenHeight = 480
+	gridSize     = 15
 )
 
-// Broadcast 广播消息
-func Broadcast(message string) {
-	mu.Lock()         // 加锁，防止并发读写
-	defer mu.Unlock() // 解锁
+var foodX, foodY int // 食物位置
 
-	for _, conn := range clients { // 遍历所有客户端连接
-		_, err := conn.Write([]byte(message)) // 发送消息
-		if err != nil {
-			fmt.Printf("客户端%s发送消息失败%s\n", conn.RemoteAddr().String(), err.Error())
-			continue
-		}
-	}
+type Player struct {
+	X, Y  int
+	Snake [][2]float64 // 蛇的位置
+	Name  string       // 玩家名称
 }
 
-// HandleClient 处理每个客户端连接
-func HandleClient(conn net.Conn) {
-	defer func() { // 关闭连接
-		conn.Close()                                // 关闭连接
-		mu.Lock()                                   // 加锁，防止并发读写
-		delete(clients, conn.RemoteAddr().String()) // 删除客户端连接
-		mu.Unlock()                                 // 解锁
-		Broadcast(fmt.Sprintf("客户端%s断开连接\n", conn.RemoteAddr().String()) + "\n")
-	}()
+var players = make(map[net.Conn]*Player) // 保存所有玩家信息（连接）
+var mu sync.Mutex                        // 保护players的读写操作
 
-	fmt.Println("客户端连接成功", conn.RemoteAddr().String(), "开始处理消息...")
-	// 1.保存客户端信息
-	mu.Lock()                                  // 加锁，防止并发读写
-	clients[conn.RemoteAddr().String()] = conn // 保存客户端连接
-	mu.Unlock()                                // 解锁
+func placeFood() {
+	foodX = (rand.Intn(screenWidth / gridSize)) * gridSize
+	foodY = (rand.Intn(screenHeight / gridSize)) * gridSize
+	fmt.Printf("食物已生成, 当前位置为 x:%d, y:%d\n", foodX, foodY) // 打印食物位置
 
-	// 2.接收客户端发送的消息
-	scanner := bufio.NewScanner(conn) // 读取客户端发送的消息
-	for scanner.Scan() {
-		message := scanner.Text() // 读取消息
-		message = message + "\n"  // 添加换行符
-		// 3.将消息广播给其他客户端
-		Broadcast(message) // 广播消息
-	}
 }
 
 func main() {
-	// 修改监听地址格式
 	listener, err := net.Listen("tcp", ":5090")
 	if err != nil {
 		panic(err)
 	}
-	defer listener.Close() // 关闭监听
-	fmt.Println("服务器启动成功，等待客户端连接...")
+
+	fmt.Println("服务器启动成功……")
+	placeFood() // 生成食物
+
 	for {
-		conn, err := listener.Accept() // 接收客户端连接
+		conn, err := listener.Accept()
 		if err != nil {
-			fmt.Println("客户端连接失败", err.Error())
-			continue // 继续等待下一个连接
+			fmt.Println("与客户端建立连接失败：", err.Error())
+			continue
 		}
 		go HandleClient(conn) // 处理每个客户端连接
+	}
+}
+
+func HandleClient(conn net.Conn) {
+	defer func() {
+		conn.Close()
+		mu.Lock()
+		delete(players, conn)
+		mu.Unlock()
+	}()
+
+	// 保存玩家信息
+	player := Player{}
+	player.Y = 0
+	player.X = 0
+	player.Snake = [][2]float64{{0, 0}}
+	player.Name = conn.RemoteAddr().String()
+	fmt.Println("客户端连接成功", conn.RemoteAddr().String(), "开始处理消息...")
+	mu.Lock()               // 加锁，防止并发读写
+	players[conn] = &player // 保存玩家连接
+	mu.Unlock()             // 解锁
+
+	Broadcast(fmt.Sprintf("food#%d#%d", foodX, foodY), pkg.TypeFood)
+
+	// 1.接收玩家信息
+	for {
+		messageFrame, err := pkg.ReadFrame(conn)
+		// buffer := make([]byte, 2048)
+		// n, err := conn.Read(buffer)
+		if err != nil {
+			fmt.Println("读取客户端", conn.RemoteAddr().String(), "失败：", err.Error())
+			return
+		}
+		// i.玩家位置信息   i.玩家吃到食物信息
+		// message := string(buffer[:n])
+		message := string(messageFrame.Data)
+		// messageSlice := strings.Split(message, "#")
+
+		switch messageFrame.Type {
+		case pkg.TypePlayerMove:
+			// 收到客户端玩家信息
+			newPlayer := Player{}
+			err := json.Unmarshal([]byte(message), &newPlayer)
+			if err != nil {
+				fmt.Println("反序列化失败：", err.Error())
+				continue
+			}
+			mu.Lock()
+			players[conn] = &player
+			mu.Unlock()
+			// 保存之后，再广播出去
+			Broadcast(message, pkg.TypePlayerMove)
+			break
+		case pkg.TypeEat:
+			// 收到客户端吃到食物信息
+			placeFood()
+			Broadcast(fmt.Sprintf("food#%d#%d", foodX, foodY), pkg.TypeFood)
+		}
+
+		// if len(messageSlice) == 1 {
+		// 	// 收到客户端玩家信息
+		// 	newPlayer := Player{}
+		// 	err := json.Unmarshal([]byte(message), &newPlayer)
+		// 	if err != nil {
+		// 		fmt.Println("反序列化失败：", err.Error())
+		// 		continue
+		// 	}
+		// 	mu.Lock()
+		// 	players[conn] = &player
+		// 	mu.Unlock()
+		// 	// 保存之后，再广播出去
+		// 	Broadcast(message)
+		// } else if len(messageSlice) == 2 {
+		// 	// 收到客户端吃到食物信息
+		// 	placeFood()
+		// 	Broadcast(fmt.Sprintf("food#%d#%d", foodX, foodY))
+		// }
+	}
+}
+
+func Broadcast(message string, msgType uint8) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	for conn := range players {
+		err := pkg.WriteFrame(conn, msgType, []byte(message))
+		// _, err := conn.Write([]byte(message))
+		if err != nil {
+			fmt.Println("向客户端", conn.RemoteAddr().String(), "发送消息失败：", err.Error())
+			continue
+		}
 	}
 }

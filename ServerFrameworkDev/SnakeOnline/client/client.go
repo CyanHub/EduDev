@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ServerFrameWork/pkg"
 	"encoding/json"
 	"fmt"
 	"image/color"
@@ -81,6 +82,8 @@ func (g *Game) Update() error {
 				fmt.Println("序列化失败", err.Error())
 				return err
 			}
+			// g.SendMessage(data)
+			g.SendFrame(data, pkg.TypePlayerMove)
 		}
 
 	}
@@ -89,10 +92,32 @@ func (g *Game) Update() error {
 	// 检查是否吃到食物
 	if g.x == g.foodX && g.y == g.foodY {
 		g.growSnake()
+		data, err := json.Marshal(&mySelf)
+		if err != nil {
+			fmt.Println("序列化失败", err.Error())
+			return err
+		}
+		message := fmt.Sprintf("eat#%s", string(data))
+		// g.SendMessage([]byte(message))
+		g.SendFrame([]byte(message), pkg.TypeEat)
 		// g.placeFood()
 	}
 	return nil
 }
+
+func (g *Game) SendFrame(data []byte, msgType uint8) {
+	err := pkg.WriteFrame(g.conn, msgType, data)
+	if err != nil {
+		fmt.Println("发送消息失败", err.Error())
+	}
+}
+
+// func (g *Game) SendMessage(data []byte) {
+// 	_, err := g.conn.Write(data)
+// 	if err != nil {
+// 		fmt.Println("发送消息失败", err.Error())
+// 	}
+// }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.mu.Lock()
@@ -143,12 +168,6 @@ func (g *Game) growSnake() {
 	g.snake = append(g.snake, lastPos)
 }
 
-// func (g *Game) placeFood() {
-// 	g.foodX = (rand.Intn(screenWidth / gridSize)) * gridSize
-// 	g.foodY = (rand.Intn(screenHeight / gridSize)) * gridSize
-// 	fmt.Println("Food placed")
-// }
-
 func main() {
 	game := &Game{
 		x:     0,
@@ -170,7 +189,7 @@ func main() {
 	go game.HandleServerMessage() // 处理服务器消息
 
 	ebiten.SetWindowSize(screenWidth, screenHeight)
-	ebiten.SetWindowTitle("Snake Game")
+	ebiten.SetWindowTitle("贪吃蛇 联机版")
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
 	}
@@ -183,15 +202,20 @@ func (g *Game) HandleServerMessage() {
 	}()
 	// 接收服务器发送的消息 放置事物的消息，其他玩家的位置的消息
 	for {
-		buffer := make([]byte, 2048)  // 读取消息
-		_, err := g.conn.Read(buffer) // 读取消息
+		// buffer := make([]byte, 2048)  // 读取消息
+		// n, err := g.conn.Read(buffer) // 读取消息
+
+		messageFrame, err := pkg.ReadFrame(g.conn)
 		if err != nil {
 			fmt.Printf("客户端%s发送消息失败%s\n", g.conn.LocalAddr().String(), err.Error())
 			return
 		}
-		message := string(buffer)                   // 读取消息
+		// message := string(buffer[:n])               // 读取消息
+		message := string(messageFrame.Data)        // 读取消息
 		messageSlice := strings.Split(message, "#") // 分割消息
-		if len(messageSlice) == 1 {                 // 分割消息
+		switch messageFrame.Type {
+		case pkg.TypePlayerMove:
+			fmt.Println("收到来自服务器广播的玩家位置信息：", message)
 			// 收到玩家位置信息
 			player := Player{}                                      // 玩家信息
 			err := json.Unmarshal([]byte(messageSlice[0]), &player) // 解析消息
@@ -204,13 +228,36 @@ func (g *Game) HandleServerMessage() {
 				players[player.Name] = &player // 保存玩家连接
 				mu.Unlock()                    // 解锁
 			}
-
-		} else if len(messageSlice) == 3 { // 分割消息}
+			// break  // 这个Break其实冗余了，有和没有是没区别的
+		case pkg.TypeFood:
 			// 收到服务器发来的食物信息
 			x, _ := strconv.Atoi(messageSlice[1]) // 食物X坐标
 			y, _ := strconv.Atoi(messageSlice[2]) // 食物Y坐标
 			g.foodX = x                           // 保存食物X坐标
 			g.foodY = y                           // 保存食物Y坐标
 		}
+
+		// if len(messageSlice) == 1 { // 分割消息
+		// 	fmt.Println("收到来自服务器广播的玩家位置信息：", message)
+		// 	// 收到玩家位置信息
+		// 	player := Player{}                                      // 玩家信息
+		// 	err := json.Unmarshal([]byte(messageSlice[0]), &player) // 解析消息
+		// 	if err != nil {
+		// 		fmt.Println("反序列失败，解析消息失败：", err.Error())
+		// 		continue
+		// 	}
+		// 	if player.Name != mySelf.Name {
+		// 		mu.Lock()                      // 加锁，防止并发读写
+		// 		players[player.Name] = &player // 保存玩家连接
+		// 		mu.Unlock()                    // 解锁
+		// 	}
+		// } else if len(messageSlice) == 3 { // 分割消息}
+		// 	// 收到服务器发来的食物信息
+		// 	x, _ := strconv.Atoi(messageSlice[1]) // 食物X坐标
+		// 	y, _ := strconv.Atoi(messageSlice[2]) // 食物Y坐标
+		// 	g.foodX = x                           // 保存食物X坐标
+		// 	g.foodY = y                           // 保存食物Y坐标
+		// }
+		// }
 	}
 }
