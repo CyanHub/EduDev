@@ -2,8 +2,6 @@ module ServerFramework
 
 go 1.24.0
 
-toolchain go1.23.4
-
 require (
 	github.com/PuerkitoBio/goquery v1.9.1
 	github.com/casbin/casbin/v2 v2.102.0
