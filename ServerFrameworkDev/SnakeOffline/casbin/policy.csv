@@ -1,0 +1,7 @@
+p, admin, data1, read
+p, admin, data1, write
+p, bob, data2, read
+p, bob, data2, write
+g, alice, admin, 
+g, superAdmin, admin, 
+g, jack, superAdmin, 
