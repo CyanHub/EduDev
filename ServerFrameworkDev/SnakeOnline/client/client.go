@@ -258,6 +258,6 @@ func (g *Game) HandleServerMessage() {
 		// 	g.foodX = x                           // 保存食物X坐标
 		// 	g.foodY = y                           // 保存食物Y坐标
 		// }
-		// }
+		// }  // 分割消息
 	}
 }
