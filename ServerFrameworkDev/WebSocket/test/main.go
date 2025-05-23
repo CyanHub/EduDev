@@ -16,7 +16,7 @@ import (
 
 func ExampleJSONSerializer() {
 	course := &model.Subject{
-		Name:     "Go高级编程1000",
+		Name:     "Go高级编程2201",
 		Tags:     []string{"Golang", "后端", "高级"},
 		Syllabus: []string{"并发编程", "网络编程", "底层原理"},
 		Properties: map[string]interface{}{
@@ -98,7 +98,7 @@ func CronUse() {
 			select {
 			case <-quit:
 				fmt.Println("定时任务退出")
-				break
+				return // 退出goroutine
 			}
 		}
 	}()
@@ -116,10 +116,10 @@ func TickerUse() {
 			select {
 			case <-ticker.C:
 				fmt.Println("当前时间是：", time.Now().Format("2006-01-02 15:04:05"))
-				break
+				return // 只执行一次
 			case <-quit:
 				ticker.Stop()
-				return
+				return // 退出goroutine
 			}
 		}
 	}()
