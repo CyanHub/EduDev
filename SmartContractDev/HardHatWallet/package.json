@@ -1,0 +1,21 @@
+{
+  "name": "hardhatwallet",
+  "version": "1.0.0",
+  "description": "基于Hardhat的MetaMask区块链钱包",
+  "main": "index.js",
+  "scripts": {
+    "test": "debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/CyanHub/EduDev"
+  },
+  "keywords": [
+    "BCWallet"
+  ],
+  "author": "CyanHub",
+  "license": "ISC",
+  "devDependencies": {
+    "hardhat": "^2.24.1"
+  }
+}
