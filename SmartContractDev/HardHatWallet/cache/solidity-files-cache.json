@@ -1,0 +1,41 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "E:\\Development\\DevTool\\GitHub\\Zooker\\EduDev\\SmartContractDev\\HardHatWallet\\contracts\\test.sol": {
+      "lastModificationDate": 1748768116644,
+      "contentHash": "6045fd3729c3f22c3914af2d7ad6bca7",
+      "sourceName": "contracts/test.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.28"
+      ],
+      "artifacts": [
+        "Test"
+      ]
+    }
+  }
+}
