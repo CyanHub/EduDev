@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 
+	"database/sql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -24,9 +25,19 @@ func AutoMigrate(db *gorm.DB) error {
 // MustLoadGorm 初始化 GORM 数据库连接，若失败则终止程序
 func MustLoadGorm() {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s", global.CONFIG.MySQL.User, global.CONFIG.MySQL.Password, global.CONFIG.MySQL.Host, global.CONFIG.MySQL.Port, global.CONFIG.MySQL.Database, global.CONFIG.MySQL.Config)
-	db, err := gorm.Open(mysql.Open(dsn))
+
+	// 使用 sql.Open 而不是 gorm.Open
+	sqlDB, err := sql.Open("mysql", dsn)
 	if err != nil {
-		// 使用 log.Fatal 记录错误信息并终止程序
+		log.Fatalf("SQL 数据库连接初始化失败: %v", err)
+	}
+
+	// 使用 sqlDB 创建 gorm.DB 实例
+	db, err := gorm.Open(mysql.New(mysql.Config{
+		Conn: sqlDB,
+	}), &gorm.Config{})
+
+	if err != nil {
 		log.Fatalf("GORM 数据库连接初始化失败: %v", err)
 	}
 	global.DB = db

@@ -1,15 +1,14 @@
 package initialize
 
 import (
-	"fmt"
-	"net/http"
-	"runtime"
-
 	"ServerFramework/global"
 	"ServerFramework/initialize/task"
 	"ServerFramework/router"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron/v3"
+	"net/http"
+	_ "net/http/pprof"
 )
 
 // MustRunWindowServer 启动服务
@@ -23,14 +22,14 @@ func MustRunWindowServer() {
 	userGroup := router.UserGroup{}
 	userGroup.InitUserRouters(engine)
 
-	runtime.SetBlockProfileRate(1)
-	runtime.SetMutexProfileFraction(1)
+	roleGroup := router.RoleGroup{}
+	roleGroup.InitRoleRouters(engine)
 
 	address := fmt.Sprintf(":%d", global.CONFIG.App.Port)
-	fmt.Println("启动服务器，监听端口：", address)
+
 	global.Cron = cron.New(cron.WithSeconds())
 	global.Cron.Start()
-	task.AddClerOperationRecord(global.Cron)
+	task.AddClerOperationRecordTask(global.Cron)
 
 	go func() {
 		pprofAddress := ":6060" // 或者其他你想要的端口
@@ -39,6 +38,8 @@ func MustRunWindowServer() {
 			fmt.Println("pprof 服务启动失败:", err)
 		}
 	}()
+
+	fmt.Println("启动服务器，监听端口：", address)
 	if err := engine.Run(address); err != nil {
 		panic(err)
 	}

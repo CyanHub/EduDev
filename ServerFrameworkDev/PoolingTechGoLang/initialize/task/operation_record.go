@@ -25,7 +25,7 @@ func ClearOperationRecord() error {
 var cronStr = "*/30 * * * * *"
 var clearOperationRecordID cron.EntryID
 
-func AddClerOperationRecord(cron *cron.Cron) {
+func AddClerOperationRecordTask(cron *cron.Cron) {
 	var err error
 	clearOperationRecordID, err = cron.AddFunc(cronStr, func() {
 		fmt.Println("定时任务开始...")
