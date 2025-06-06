@@ -1,0 +1,28 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["package.json"],
+      "url": "https://www.schemastore.org/package.json"
+    }
+  ],
+  "cSpell.words": [
+    "addmember",
+    "anymatch",
+    "brorand",
+    "drbg",
+    "extglob",
+    "fdir",
+    "fullwidth",
+    "keccak",
+    "mnemonist",
+    "ranklist",
+    "readdirp",
+    "toidentifier",
+    "tsort",
+    "universalify",
+    "unparser",
+    "workerpool",
+    "wrappy",
+    "yocto"
+  ]
+}

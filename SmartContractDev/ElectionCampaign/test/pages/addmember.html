@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>竞选填写</title>
+    <link rel="icon" href="../images/RankFirst.png">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/ethers.umd.min.js"></script>
+    <script type="module" src="../js/addmember.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            /* 使用 Flexbox 布局让子元素在页面中完全居中 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            width: 400px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h3 class="text-center">竞选填写</h3>
+        <div class="mb-3">
+            <label for="candidateName" class="form-label">姓名：</label>
+            <input type="text" id="candidateName" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="candidateDescription" class="form-label">简介：</label>
+            <input type="text" id="candidateDescription" class="form-control">
+        </div>
+        <div class="action-buttons">
+            <button id="goToVoteBtn" class="btn btn-light me-2">去投票</button>
+            <button id="submitBtn" class="btn btn-primary">提交</button>
+        </div>
+    </div>
+
+    <!-- Bootstrap 模态框 -->
+    <div class="modal fade" id="submitResultModal" tabindex="-1" aria-labelledby="submitResultModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submitResultModalLabel">提示</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    参赛成功！
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通过 script 标签引入 Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hardhat本地网络连接测试</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <script src="./test.js"></script>
+</head>
+
+<body>
+    <button id="connectButton">连接MetaMask</button>
+    <button id="callContractButton" disabled>调用合约</button>
+    <div id="result"></div>
+
+    <script>
+        const {
+            abi,
+            contractAddress
+        } = module.exports;
+        let provider, signer, contract;
+
+        document.getElementById('connectButton').addEventListener('click', async () => {
+            if (window.ethereum) {
+                try {
+                    // 请求账户访问权限
+                    await window.ethereum.request({
+                        method: 'eth_requestAccounts'
+                    });
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = provider.getSigner();
+                    document.getElementById('callContractButton').disabled = false;
+                    document.getElementById('result').innerText = "MetaMask连接成功！";
+                } catch (error) {
+                    console.error("连接失败:", error);
+                }
+            } else {
+                alert("请安装MetaMask!");
+            }
+        });
+
+        document.getElementById('callContractButton').addEventListener('click', async () => {
+            contract = new ethers.Contract(contractAddress, abi, signer);
+            try {
+                const sum = await contract.getSum();
+                document.getElementById('result').innerText = `数组求和结果: ${sum}`;
+            } catch (error) {
+                console.error("调用合约失败:", error);
+            }
+        });
+    </script>
+</body>
+
+</html>
