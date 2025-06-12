@@ -1,0 +1,15 @@
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\bin\Debug\net10.0\HelloWorld.exe
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\bin\Debug\net10.0\HelloWorld.deps.json
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\bin\Debug\net10.0\HelloWorld.runtimeconfig.json
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\bin\Debug\net10.0\HelloWorld.dll
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\bin\Debug\net10.0\HelloWorld.pdb
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\obj\Debug\net10.0\HelloWorld.GeneratedMSBuildEditorConfig.editorconfig
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\obj\Debug\net10.0\HelloWorld.AssemblyInfoInputs.cache
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\obj\Debug\net10.0\HelloWorld.AssemblyInfo.cs
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\obj\Debug\net10.0\HelloWorld.csproj.CoreCompileInputs.cache
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\obj\Debug\net10.0\HelloWorld.sourcelink.json
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\obj\Debug\net10.0\HelloWorld.dll
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\obj\Debug\net10.0\refint\HelloWorld.dll
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\obj\Debug\net10.0\HelloWorld.pdb
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\obj\Debug\net10.0\HelloWorld.genruntimeconfig.cache
+E:\Development\DevTool\GitHub\CyanHub\EduDev\WindowsNetDev\HelloWorld\HelloWorld\obj\Debug\net10.0\ref\HelloWorld.dll
