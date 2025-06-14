@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件管理 - 文档管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --header-bg: #6170C3;
+            --footer-bg: #35576E;
+            --table-header-gradient: linear-gradient(to right, #a0a8aa, #bcc1c2);
+        }
+        
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .header {
+            background-color: var(--header-bg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            object-fit: cover;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+        }
+        
+        .file-manager {
+            margin-top: 30px;
+        }
+        
+        .table-header {
+            background: var(--table-header-gradient);
+            font-weight: 600;
+        }
+        
+        .file-action-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            margin-right: 5px;
+        }
+        
+        .footer {
+            background-color: var(--footer-bg);
+            color: white;
+        }
+        
+        .upload-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header fixed-top">
+        <div class="container-fluid d-flex justify-content-between align-items-center py-2 px-4">
+            <h4 class="text-white mb-0">
+                <i class="bi bi-folder-fill me-2"></i>文件管理系统
+            </h4>
+            <div class="dropdown">
+                <img src="images/avatar/RopeNetUser02.webp" 
+                     class="user-avatar dropdown-toggle" 
+                     data-bs-toggle="dropdown"
+                     alt="用户头像">
+                <ul class="dropdown-menu dropdown-menu-end p-3" style="width: 280px;">
+                    <li class="text-center mb-3">
+                        <img src="images/avatar/RopeNetUser02.webp" 
+                             class="rounded-circle mb-2" 
+                             width="80" 
+                             height="80"
+                             style="object-fit: cover;">
+                        <h5 id="user-name">用户名</h5>
+                        <small class="text-muted" id="user-email">user@example.com</small>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="d-flex justify-content-between">
+                        <span class="text-muted">用户ID:</span>
+                        <span id="user-id">1001</span>
+                    </li>
+                    <li class="d-flex justify-content-between mt-2">
+                        <span class="text-muted">角色:</span>
+                        <span id="user-role">普通用户</span>
+                    </li>
+                    <li><hr class="dropdown-divider mt-2"></li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="/static/logout.html">
+                            <i class="bi bi-box-arrow-right me-2"></i>登出
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container file-manager">
+        <!-- 上传区域 -->
+        <div class="upload-section">
+            <h5><i class="bi bi-cloud-arrow-up-fill me-2"></i>文件上传</h5>
+            <form id="upload-form" class="mt-3">
+                <div class="mb-3">
+                    <label for="file-input" class="form-label">选择文件</label>
+                    <input class="form-control" type="file" id="file-input" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-upload me-2"></i>上传文件
+                </button>
+            </form>
+        </div>
+
+        <!-- 文件列表 -->
+        <div class="card shadow-sm">
+            <div class="card-header table-header">
+                <h5 class="mb-0"><i class="bi bi-list-check me-2"></i>文件管理列表</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>文件名称</th>
+                            <th>文件大小</th>
+                            <th>提供者</th>
+                            <th>上传时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="file-list">
+                        <!-- 文件列表将通过JS动态加载 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部版权 -->
+    <footer class="footer fixed-bottom py-3">
+        <div class="container text-center">
+            <small>© 2025 文件管理系统 - 版权所有</small>
+        </div>
+    </footer>
+
+    <!-- 脚本引用 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        // 页面加载时获取用户信息
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/user/info', {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.code === 200) {
+                    document.getElementById('user-name').textContent = data.data.username;
+                    document.getElementById('user-email').textContent = data.data.email;
+                    document.getElementById('user-id').textContent = data.data.id;
+                    // 后续可添加角色信息
+                }
+            });
+            
+            // 加载文件列表
+            loadFiles();
+        });
+
+        // 文件上传处理
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('file-input');
+            if (!fileInput.files.length) {
+                Swal.fire('错误', '请选择要上传的文件', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            try {
+                const response = await fetch('/file/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    },
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: '上传成功',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    loadFiles();
+                    fileInput.value = ''; // 清空文件选择
+                } else {
+                    throw new Error(result.msg || '上传失败');
+                }
+            } catch (error) {
+                Swal.fire('上传失败', error.message, 'error');
+            }
+        });
+
+        // 加载文件列表
+        async function loadFiles() {
+            try {
+                const response = await fetch('/file/list', {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    renderFiles(result.data);
+                } else {
+                    throw new Error(result.msg || '获取文件列表失败');
+                }
+            } catch (error) {
+                console.error('加载文件列表失败:', error);
+                Swal.fire('错误', '加载文件列表失败', 'error');
+            }
+        }
+
+        // 渲染文件列表
+        function renderFiles(files) {
+            const tbody = document.getElementById('file-list');
+            tbody.innerHTML = '';
+            
+            if (!files || files.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">
+                            <i class="bi bi-folder-x" style="font-size: 2rem;"></i>
+                            <div class="mt-2">暂无文件</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            files.forEach(file => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        ${file.name}
+                    </td>
+                    <td>${formatFileSize(file.size)}</td>
+                    <td>${file.uploader || '系统'}</td>
+                    <td>${new Date(file.createdAt).toLocaleString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-success file-action-btn" onclick="downloadFile(${file.id})">
+                            <i class="bi bi-download"></i> 下载
+                        </button>
+                        <button class="btn btn-sm btn-danger file-action-btn" onclick="deleteFile(${file.id})">
+                            <i class="bi bi-trash"></i> 删除
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 下载文件
+        async function downloadFile(fileID) {
+            try {
+                const response = await fetch(`/file/download/${fileID}`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('下载失败');
+                }
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                
+                // 从Content-Disposition获取文件名
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let fileName = 'file';
+                if (contentDisposition) {
+                    const fileNameMatch = contentDisposition.match(/filename="?(.+?)"?$/);
+                    if (fileNameMatch && fileNameMatch[1]) {
+                        fileName = fileNameMatch[1];
+                    }
+                }
+                
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                Swal.fire('下载失败', error.message, 'error');
+            }
+        }
+
+        // 登出
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

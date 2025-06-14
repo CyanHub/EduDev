@@ -1,0 +1,41 @@
+package router
+
+import (
+    "FileSystem/api"
+    "github.com/gin-gonic/gin"
+)
+
+type UserGroup struct{}
+
+func (ug *UserGroup) InitUserRouters(engine *gin.Engine) {
+    userRouter := engine.Group("/user")
+    {
+        userRouter.POST("/login", api.Login)
+        userRouter.POST("/logout", api.OnlineTool)
+        userRouter.POST("/register", api.Register)
+        userRouter.POST("/list", api.UserList)
+    }
+}
+
+// package router
+
+// import (
+// 	"FileSystem/api"
+// 	"FileSystem/middleware"
+
+// 	"github.com/gin-gonic/gin"
+// )
+
+// type UserGroup struct{}
+
+// func (u *UserGroup) InitUserRouters(engine *gin.Engine) {
+// 	userRouters := engine.Group("user")
+// 	userRouters.POST("login", api.Login)
+// 	userRouters.POST("logout", api.OnlineTool)
+// 	userRouters.POST("register", api.Register)
+// 	userRouters.POST("list", middleware.OperationRecord(), middleware.JwtMiddleware(), middleware.CasbinMiddleware(), api.UserList)
+// 	userRouters.GET("/ws", api.HandleWebSocket)
+
+// 	// userRouters.POST("list", api.UserList)
+// 	// userRouters.POST("update", api.UpdateUser)
+// }
