@@ -18,10 +18,10 @@ type OperationRecord struct {
 	Body         string        `json:"body" form:"body" gorm:"type:text;column:body;comment:请求Body"`                 // 请求Body
 	Resp         string        `json:"resp" form:"resp" gorm:"type:text;column:resp;comment:响应Body"`                 // 响应Body
 	// UserID       int           `json:"user_id" form:"user_id" gorm:"column:user_id;comment:用户id"`                    // 用户id
-	User         User          `json:"user" gorm:"foreignKey:UserID;references:ID"`                                  // 用户
-	FileName     string        `json:"file_name" form:"file_name" gorm:"column:file_name;comment:文件名"`               // 文件名
-	Operation    string        `json:"operation" form:"operation" gorm:"column:operation;comment:操作类型"`              // 操作类型
-	Error        string        `json:"error" form:"error" gorm:"column:error;comment:错误信息"`                          // 错误信息
+	User      User   `json:"user" gorm:"foreignKey:UserID;references:ID"`                     // 用户
+	FileName  string `json:"file_name" form:"file_name" gorm:"column:file_name;comment:文件名"`  // 文件名
+	Operation string `json:"operation" form:"operation" gorm:"column:operation;comment:操作类型"` // 操作类型
+	Error     string `json:"error" form:"error" gorm:"column:error;comment:错误信息"`             // 错误信息
 
 	ID              uint64    `gorm:"primaryKey;type:bigint unsigned"`
 	UserID          uint64    `gorm:"type:bigint unsigned;not null"`

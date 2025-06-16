@@ -8,7 +8,7 @@ type Role struct {
 	global.GSModel
 	ParentID    uint64       `gorm:"index"`
 	Permissions []Permission `gorm:"many2many:role_permissions;comment:角色权限"`
-	Name        string       `gorm:"unique;size:50;comment:角色名称"`
+	Name        string       `gorm:"unique;size:50;comment:角色名称"` // 确保有 Name 字段
 	Description string       `gorm:"size:255;comment:角色描述"`
 }
 

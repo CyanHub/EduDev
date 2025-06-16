@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <!-- 添加 favicon 链接 -->
-     <link rel="icon" href="../images/icon/DocumentsIcon.png" type="image/png">
+    <!-- 添加 favicon 链接 -->
+    <link rel="icon" href="../images/icon/DocumentsIcon.png" type="image/png">
     <title>文件管理 - 文档管理系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
@@ -21,25 +21,25 @@
                 <i class="bi bi-folder-fill me-2"></i>文件管理系统
             </h4>
             <div class="dropdown">
-                <img src="../static/images/avatar/RopeNetUser02.webp" class="user-avatar dropdown-toggle"
+                <img id="user-avatar" src="" class="user-avatar dropdown-toggle"
                     data-bs-toggle="dropdown" alt="用户头像">
                 <ul class="dropdown-menu dropdown-menu-end p-3" style="width: 280px;">
                     <li class="text-center mb-3">
-                        <img src="../static/images/avatar/RopeNetUser02.webp" class="rounded-circle mb-2" width="80"
+                        <img id="user-avatar-modal" src="" class="rounded-circle mb-2" width="80"
                             height="80" style="object-fit: cover;">
-                        <h5 id="user-name">{{userName}}</h5>
-                        <small class="text-muted" id="user-email">{{userEmail}}</small>
+                        <h5 id="user-name"></h5>
+                        <small class="text-muted" id="user-email"></small>
                     </li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
                     <li class="d-flex justify-content-between">
                         <span class="text-muted">用户ID:</span>
-                        <span id="user-id">{{userId}}</span>
+                        <span id="user-id"></span>
                     </li>
                     <li class="d-flex justify-content-between mt-2">
                         <span class="text-muted">角色:</span>
-                        <span id="user-role">{{userRole}}</span>
+                        <span id="user-role"></span>
                     </li>
                     <li>
                         <hr class="dropdown-divider mt-2">

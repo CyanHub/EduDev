@@ -19,7 +19,7 @@ type FileService struct{}
 var FileServiceApp = new(FileService)
 
 const (
-	fileStorageRoot = "./storage/files"
+	fileStorageRoot = "./uploads/files"
 	maxFileSize     = 100 << 20 // 100MB
 )
 

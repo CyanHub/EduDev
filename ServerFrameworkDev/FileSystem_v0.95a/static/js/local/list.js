@@ -1,3 +1,55 @@
+// 全局变量存储当前操作的文件ID
+let currentFileId = null;
+let currentUserId = null;
+let isAdmin = false;
+
+// 页面加载时加载文件列表和用户信息
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await loadUserInfo();
+        loadFileList();
+    } catch (error) {
+        console.error('页面初始化失败:', error);
+        Swal.fire('错误', '页面初始化失败', 'error');
+    }
+});
+
+// 加载用户信息
+async function loadUserInfo() {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const response = await fetch('/api/user/info', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            document.getElementById('user-avatar').src = result.data.avatar;
+            document.getElementById('user-avatar-modal').src = result.data.avatar;
+            document.getElementById('user-id').textContent = result.data.id;
+            document.getElementById('user-email').textContent = result.data.email;
+            document.getElementById('user-role').textContent = result.data.role;
+            currentUserId = result.data.id;
+            isAdmin = result.data.role === '管理员';
+        } else {
+            console.error('获取用户信息失败，错误信息:', result.message); // 添加错误信息输出
+            throw new Error(result.message || '获取用户信息失败');
+        }
+    } catch (error) {
+        console.error('获取用户信息失败:', error);
+        Swal.fire('错误', '获取用户信息失败，请重新登录', 'error');
+        window.location.href = 'login.html';
+    }
+}
+
 // 上传文件函数
 async function uploadFiles() {
     const fileInput = document.getElementById('fileInput');
@@ -17,45 +69,43 @@ async function uploadFiles() {
             formData.append('files', fileInput.files[i]);
         }
 
+        const token = localStorage.getItem('token');
         const response = await fetch('/api/file/upload', {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': `Bearer ${token}`
             },
-            body: formData,
-            // 添加上传进度监控
-            onUploadProgress: (e) => {
-                const percent = Math.round((e.loaded / e.total) * 100);
-                progress.style.width = `${percent}%`;
-                progress.textContent = `${percent}%`;
-            }
+            body: formData
         });
 
+        const result = await response.json();
+
         if (response.ok) {
-            Swal.fire('成功', '文件上传成功', 'success');
-            loadFileList(); // 刷新文件列表
+            await Swal.fire({
+                icon: 'success',
+                title: '上传成功',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            loadFileList();
             fileInput.value = ''; // 清空文件选择
             progressBar.classList.add('d-none');
         } else {
-            throw new Error('上传失败');
+            throw new Error(result.message || '上传失败');
         }
     } catch (error) {
-        Swal.fire('错误', error.message, 'error');
+        Swal.fire('上传失败', error.message, 'error');
         progressBar.classList.add('d-none');
     }
 }
 
-// 全局变量存储当前操作的文件ID
-let currentFileId = null;
-let currentUserId = null;
-let isAdmin = false;
-
 // 加载文件列表
 async function loadFileList() {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch('/api/file/list', {
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': `Bearer ${token}`
             }
         });
 
@@ -64,7 +114,7 @@ async function loadFileList() {
         if (response.ok) {
             renderFiles(result.data);
         } else {
-            throw new Error(result.msg || '获取文件列表失败');
+            throw new Error(result.message || '获取文件列表失败');
         }
     } catch (error) {
         console.error('加载文件列表失败:', error);
@@ -132,9 +182,10 @@ function formatFileSize(bytes) {
 // 模拟 downloadFile 函数
 async function downloadFile(fileId) {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`/api/file/download/${fileId}`, {
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': `Bearer ${token}`
             }
         });
 
@@ -158,10 +209,11 @@ async function downloadFile(fileId) {
 // 模拟 deleteFile 函数
 async function deleteFile(fileId) {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`/api/file/delete/${fileId}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': `Bearer ${token}`
             }
         });
 
@@ -176,7 +228,7 @@ async function deleteFile(fileId) {
             });
             loadFileList();
         } else {
-            throw new Error(result.msg || '删除文件失败');
+            throw new Error(result.message || '删除文件失败');
         }
     } catch (error) {
         console.error('删除文件失败:', error);
@@ -196,6 +248,7 @@ async function setFilePermissions() {
     if (!currentFileId) return;
 
     try {
+        const token = localStorage.getItem('token');
         const targetUserId = document.getElementById('targetUserId').value;
         const permRead = document.getElementById('permRead').checked;
         const permWrite = document.getElementById('permWrite').checked;
@@ -205,7 +258,7 @@ async function setFilePermissions() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
                 targetUserId,
@@ -228,7 +281,7 @@ async function setFilePermissions() {
             modal.hide();
             loadFileList();
         } else {
-            throw new Error(result.msg || '权限设置失败');
+            throw new Error(result.message || '权限设置失败');
         }
     } catch (error) {
         console.error('权限设置失败:', error);
@@ -236,55 +289,14 @@ async function setFilePermissions() {
     }
 }
 
-// 模拟 uploadFiles 函数
-async function uploadFiles() {
-    const fileInput = document.getElementById('fileInput');
-    const files = fileInput.files;
-    if (files.length === 0) {
-        Swal.fire('提示', '请选择要上传的文件', 'info');
-        return;
-    }
-
-    const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-        formData.append('files', files[i]);
-    }
-
-    try {
-        const response = await fetch('/api/file/upload', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            },
-            body: formData
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            await Swal.fire({
-                icon: 'success',
-                title: '上传成功',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            loadFileList();
-            fileInput.value = ''; // 清空文件选择
-        } else {
-            throw new Error(result.msg || '上传失败');
-        }
-    } catch (error) {
-        Swal.fire('上传失败', error.message, 'error');
-    }
-}
-
 // 模拟 logout 函数
 async function logout() {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch('/api/auth/logout', {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': `Bearer ${token}`
             }
         });
 
@@ -299,9 +311,3 @@ async function logout() {
         Swal.fire('错误', '登出失败', 'error');
     }
 }
-
-// 页面加载时加载文件列表
-document.addEventListener('DOMContentLoaded', () => {
-    loadFileList();
-    // 可添加获取 currentUserId 和 isAdmin 的逻辑
-});

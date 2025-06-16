@@ -4,6 +4,8 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -20,6 +22,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // func calculateSum(n int) int {
@@ -65,6 +68,10 @@ func Login(c *gin.Context) {
 		response.FailWithMessage("登录失败", c)
 		return
 	}
+	// 记录登录成功后的 token
+	global.Logger.Info("用户登录成功",
+		zap.String("username", user.Username),
+		zap.String("token", token))
 
 	response.OkWithData(response.LoginResponse{
 		User:  user,
@@ -75,7 +82,7 @@ func Login(c *gin.Context) {
 // Register 用户注册
 func Register(c *gin.Context) {
 	var req request.UserRegisterRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBind(&req); err != nil {
 		global.Logger.Error("参数错误",
 			zap.Error(err),
 			zap.Any("requestBody", c.Request.Body))
@@ -98,24 +105,72 @@ func Register(c *gin.Context) {
 		}
 	}
 
+	// 处理头像上传
+	file, err := c.FormFile("avatar")
+	if err != nil {
+		if err != http.ErrMissingFile {
+			global.Logger.Error("头像上传失败", zap.Error(err))
+			response.FailWithMessage("头像上传失败", c)
+			return
+		}
+		// 若未上传头像，使用默认头像
+		req.Avatar = "https://tse4-mm.cn.bing.net/th/id/OIP-C.kNpVdcZ_O_KT6StMKhNn5gHaHa?r=0&rs=1&pid=ImgDetMain&cb=idpwebp1&o=7&rm=3"
+	} else {
+		// 创建存储目录
+		avatarDir := "uploads/avatars"
+		if err := os.MkdirAll(avatarDir, 0755); err != nil {
+			global.Logger.Error("创建头像目录失败", zap.Error(err))
+			response.FailWithMessage("创建头像目录失败", c)
+			return
+		}
+
+		// 生成唯一文件名
+		ext := filepath.Ext(file.Filename)
+		now := time.Now().Format("20060102150405")
+		newFilename := req.Email + "_" + now + ext
+		avatarPath := filepath.Join(avatarDir, newFilename)
+
+		// 保存头像
+		if err := c.SaveUploadedFile(file, avatarPath); err != nil {
+			global.Logger.Error("保存头像失败", zap.Error(err))
+			response.FailWithMessage("保存头像失败", c)
+			return
+		}
+		req.Avatar = avatarPath
+	}
+
+	// 密码加密
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		global.Logger.Error("密码加密失败", zap.Error(err))
+		response.FailWithMessage("密码加密失败", c)
+		return
+	}
+
+	// 在事务闭包外部声明 user 变量
+	var user *model.User
+
 	// 开启事务
-	err := global.DB.Transaction(func(tx *gorm.DB) error {
+	err = global.DB.Transaction(func(tx *gorm.DB) error {
 		// 创建用户
-		user := &model.User{
-			Username: req.Username,
-			Password: req.Password,
-			NickName: req.NickName,
-			Email:    req.Email,
-			Phone:    req.Phone,
-			RoleId:   req.RoleId,
+		user = &model.User{
+			Username:  req.Username,
+			Password:  string(hashedPassword),
+			NickName:  req.NickName,
+			Email:     req.Email,
+			Phone:     req.Phone,
+			RoleId:    req.RoleId,
+			Avatar:    req.Avatar,
 		}
 		if err := tx.Create(user).Error; err != nil {
+
 			return err
 		}
 
 		// 分配角色
 		var role model.Role
 		if err := tx.Where("id = ?", req.RoleId).First(&role).Error; err != nil {
+
 			return err
 		}
 
@@ -124,6 +179,7 @@ func Register(c *gin.Context) {
 			RoleID: role.ID,
 		}
 		if err := tx.Create(userRole).Error; err != nil {
+
 			return err
 		}
 
@@ -132,6 +188,7 @@ func Register(c *gin.Context) {
 
 	if err != nil {
 		global.Logger.Error("注册失败", zap.Error(err))
+
 		if err == model.RecordNotFound {
 			response.FailWithMessage("指定角色不存在", c)
 		} else {
@@ -148,9 +205,10 @@ func Register(c *gin.Context) {
 
 	// 注册成功后，自动登录
 	claims := model.BaseClaims{
-		UserID:   req.ID,
+		// 现在可以正确访问 user.ID
+		UserID:   user.ID,
 		Username: req.Username,
-		RoleID:   2, // 假设默认角色 ID 为 2
+		RoleID:   req.RoleId, // 使用用户选择的角色 ID
 	}
 	token, err := utils.NewJWT().CreateToken(claims)
 	if err != nil {
@@ -165,10 +223,12 @@ func Register(c *gin.Context) {
 		"expire": time.Now().Add(time.Duration(global.CONFIG.Jwt.ExpireTime) * time.Second).Unix(),
 		"user": gin.H{
 			"username": req.Username,
-			"role":     2, // 假设默认角色 ID 为 2
+
+			"role":     req.RoleId, // 使用用户选择的角色 ID
 			"email":    req.Email,
 			"phone":    req.Phone,
 			"nickname": req.NickName,
+			"avatar":   req.Avatar,
 		},
 	}, "注册成功", c)
 }
@@ -330,11 +390,18 @@ func UserInfo(c *gin.Context) {
 		return
 	}
 
+	role, err := service.UserServiceApp.GetRoleByID(user.RoleId)
+	if err != nil {
+		global.Logger.Error("获取角色信息失败", zap.Uint64("roleID", user.RoleId))
+		response.FailWithMessage("获取角色信息失败", c)
+		return
+	}
+
 	response.OkWithData(gin.H{
-		"id":       user.ID,
-		"username": user.Username,
-		"roleId":   user.RoleId,
-		"avatar":   user.Avatar,
+		"id":     user.ID,
+		"avatar": user.Avatar,
+		"email":  user.Email,
+		"role":   role.Name,
 	}, c)
 }
 

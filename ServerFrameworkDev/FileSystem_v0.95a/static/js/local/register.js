@@ -25,14 +25,16 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     const password = document.getElementById('password').value.trim();
     const confirmPassword = document.getElementById('confirm-password').value.trim();
     const email = document.getElementById('email').value.trim();
-    const roleName = document.getElementById('role').value;
+    const roleId = document.getElementById('role').value;
 
-    // 将角色名称转换为角色 ID
-    let roleId;
-    if (roleName === 'admin') {
-        roleId = 1;
-    } else if (roleName === 'user') {
-        roleId = 2;
+    if (roleId === '0') {
+        Swal.fire({
+            icon: 'error',
+            title: '角色未选择',
+            text: '请选择一个角色',
+            showConfirmButton: true
+        });
+        return;
     }
 
     if (!username || !password || !confirmPassword || !email || !roleId) {
@@ -56,22 +58,23 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     }
 
     try {
-        // 构建JSON请求体
-        const requestBody = {
-            username,
-            password,
-            nickname: document.getElementById('nickname').value,
-            email,
-            phone: document.getElementById('phone').value,
-            roleId // 使用角色 ID
-        };
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+        formData.append('nickname', document.getElementById('nickname').value);
+        formData.append('email', email);
+        formData.append('phone', document.getElementById('phone').value);
+        formData.append('roleId', roleId);
+
+        // 增加空值检查
+        const avatarInput = document.getElementById('avatarInput');
+        if (avatarInput && avatarInput.files[0]) {
+            formData.append('avatar', avatarInput.files[0]);
+        }
 
         const response = await fetch('/api/user/register', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
+            body: formData
         });
 
         const result = await response.json();

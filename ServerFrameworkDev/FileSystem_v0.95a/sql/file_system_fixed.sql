@@ -9,19 +9,19 @@ USE `file_system`;
 -- 3. 创建基础表（按依赖顺序）
 -- 修改users表的id字段类型为bigint unsigned
 CREATE TABLE IF NOT EXISTS `users` (
-    `id` bigint unsigned NOT NULL AUTO_INCREMENT, -- 修改为unsigned
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `username` varchar(50) NOT NULL COMMENT '用户名',
     `password` varchar(100) NOT NULL COMMENT '密码',
     `nick_name` varchar(50) DEFAULT '系统用户' COMMENT '昵称',
-    `avatar` varchar(255) DEFAULT '/images/avatar/default.png' COMMENT '头像',
-    `status` tinyint(1) DEFAULT '1' COMMENT '状态(1:正常,0:禁用)',
+    `avatar` varchar(500) DEFAULT '/images/avatar/default.png' COMMENT '头像，增加长度以适应可能较长的路径',
+    `status` tinyint(1) DEFAULT 1 COMMENT '状态(1:正常,0:禁用)',
     `email` varchar(100) NOT NULL COMMENT '用户邮箱',
     `phone` varchar(20) NOT NULL COMMENT '用户手机号',
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
     PRIMARY KEY (`id`),
-    UNIQUE KEY `idx_username` (`username`)
+    UNIQUE KEY `idx_username` (`username`),
+    UNIQUE KEY `idx_email` (`email`) COMMENT '添加邮箱唯一索引，保证邮箱唯一性'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '用户表';
 
 -- 角色表
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `files` (
     `size` bigint NOT NULL COMMENT '文件大小(字节)',
     `type` varchar(50) DEFAULT NULL COMMENT '文件类型',
     `uploader_id` bigint unsigned NOT NULL COMMENT '上传者ID',
-    `is_public` tinyint(1) DEFAULT '0' COMMENT '是否公开(1:是,0:否)',
+    `is_public` tinyint(1) DEFAULT 0 COMMENT '是否公开(1:是,0:否)',
     `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),

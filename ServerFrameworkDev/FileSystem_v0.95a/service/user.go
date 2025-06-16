@@ -36,7 +36,10 @@ func (u *UserService) Login(req request.UserLoginRequest) (*model.User, error) {
 	var user model.User
 	err := global.DB.Where("username = ?", req.Username).First(&user).Error
 	if err != nil {
-		return nil, global.ErrUserNotFound
+		if err == gorm.ErrRecordNotFound {
+			return nil, global.ErrUserNotFound
+		}
+		return nil, err
 	}
 
 	// 修改为bcrypt密码验证
