@@ -6,6 +6,7 @@ import (
 	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+    "context"
 )
 
 var (
@@ -14,4 +15,6 @@ var (
 	Cron   *cron.Cron
 	Redis  *redis.Client
 	Logger *zap.Logger
+    Context context.Context
+	
 )

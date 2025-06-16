@@ -9,10 +9,11 @@ type UserRegisterRequest struct {
 	ID       uint64 `json:"id" binding:"gte=0" chinese:"用户Id"`
 	Username string `json:"username" binding:"required,min=3,max=20" chinese:"用户名"`
 	Password string `json:"password" binding:"required,min=6,max=20" chinese:"密码"`
-	NickName string `json:"nickname" binding:"" chinese:"昵称"` // 修改JSON tag为nickname
+	NickName string `json:"nickname" binding:"" chinese:"昵称"`
 	Email    string `json:"email" binding:"required,email" chinese:"邮箱"`
 	Phone    string `json:"phone" binding:"required,len=11" chinese:"手机号"`
 	Avatar   string `json:"avatar" binding:"" chinese:"头像"`
+	RoleId   uint64 `json:"roleId" binding:"required,gte=1" chinese:"角色Id"` // 添加角色 ID 字段
 }
 
 type UserListRequest struct {

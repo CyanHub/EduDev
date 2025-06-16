@@ -40,15 +40,15 @@ func Levels() []zapcore.Level {
 	return levels
 }
 
+// InitLogger 初始化 zap 日志库，使用 Viper 加载配置
 func InitLogger() {
-	// 使用 Viper 加载日志配置
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
-		panic(fmt.Errorf("Fatal error config file: %w", err))
+		panic(fmt.Errorf("fatal error config file: %s", err))
 	}
 
 	var loggerConfig struct {

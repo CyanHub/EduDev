@@ -6,48 +6,75 @@ import (
 	"time"
 
 	"FileSystem/global"
+	"FileSystem/model"
+
 	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-//func AutoMigrate(db *gorm.DB) error {
-//	return db.AutoMigrate(
-//		&model.User{},
-//		&model.Role{},
-//		&model.OperationRecord{},
-//		&model.Subject{},
-//	)
-//}
+// AutoMigrate 自动迁移数据库表结构
+func AutoMigrate(db *gorm.DB) error {
+	// 只迁移 file_system_fixed.sql 中定义的表对应的模型
+	return db.AutoMigrate(
+		&model.User{},
+		&model.Role{},
+		&model.Permission{},
+		&model.UserRole{}, // 添加 UserRole 结构体
+		&model.RolePermission{},
+		&model.File{},
+		&model.FilePermission{},
+		&model.OperationRecord{},
+	)
+}
 
+// MustInitDB 初始化 MySQL 数据库
 func MustInitDB() {
-	sqlDB, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/test_db?charset=utf8mb4&parseTime=True&loc=Local")
-	// mssql是数据库类型，user是用户名这里是root，
-	// password是密码和用户名用:相连接，这里是123456，
-	// ip是数据库地址，这里是localhost，port是端口，这里是3306，test_db是数据库名称，
-	// charset=utf8mb4&parseTime=True&loc=Local是数据库连接参数
+	mysqlConf := global.CONFIG.MySQL
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&%s",
+		mysqlConf.User,
+		mysqlConf.Password,
+		mysqlConf.Host,
+		mysqlConf.Port,
+		mysqlConf.Database,
+		mysqlConf.Config,
+	)
+
+	sqlDB, err := sql.Open("mysql", dsn)
 	if err != nil {
 		panic(err)
 	}
+
+	// 配置连接池
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetConnMaxLifetime(time.Hour)
+
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		Conn: sqlDB,
-	}))
+	}), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
+
 	global.DB = db
+	if err := AutoMigrate(global.DB); err != nil {
+		panic(fmt.Sprintf("数据库表结构迁移失败: %v", err))
+	}
 }
 
 // MustInitRedis 初始化 Redis 客户端
-// 该函数用于初始化 Redis 客户端，通过调用 redis.NewClient 方法来创建 Redis 客户端。
 func MustInitRedis() {
 	redisConf := global.CONFIG.Redis
 	global.Redis = redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%d", redisConf.Host, redisConf.Port),
+		Addr:     redisConf.Addr,
 		Password: redisConf.Password,
 		DB:       redisConf.DB,
 	})
+
+	// 测试 Redis 连接
+	ctx := global.Context
+	if _, err := global.Redis.Ping(ctx).Result(); err != nil {
+		panic(fmt.Sprintf("Redis 连接失败: %v", err))
+	}
 }

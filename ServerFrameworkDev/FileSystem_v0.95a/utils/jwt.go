@@ -25,6 +25,7 @@ type JWT struct {
 func NewJWT() *JWT {
 	return &JWT{
 		SigningKey: []byte(global.CONFIG.Jwt.Secret),
+
 	}
 }
 

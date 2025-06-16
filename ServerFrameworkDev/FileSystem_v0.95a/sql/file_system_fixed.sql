@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS `users` (
     `nick_name` varchar(50) DEFAULT '系统用户' COMMENT '昵称',
     `avatar` varchar(255) DEFAULT '/images/avatar/default.png' COMMENT '头像',
     `status` tinyint(1) DEFAULT '1' COMMENT '状态(1:正常,0:禁用)',
+    `email` varchar(100) NOT NULL COMMENT '用户邮箱',
+    `phone` varchar(20) NOT NULL COMMENT '用户手机号',
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
@@ -42,17 +44,19 @@ CREATE TABLE IF NOT EXISTS `permissions` (
     UNIQUE KEY `idx_name` (`name`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
--- 用户角色关联表（修正外键引用）
+-- 用户角色关联表
 CREATE TABLE IF NOT EXISTS `user_roles` (
     `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-    `user_id` bigint unsigned NOT NULL,
-    `role_id` bigint unsigned NOT NULL,
+    `user_id` bigint unsigned NOT NULL COMMENT '用户 ID',
+    `role_id` bigint unsigned NOT NULL COMMENT '角色 ID',
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `idx_user_role` (`user_id`, `role_id`),
-    CONSTRAINT `fk_user_roles_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_user_roles_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+    INDEX `idx_user_id` (`user_id`),
+    INDEX `idx_role_id` (`role_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '用户角色关联表';
 
 -- 角色权限关联表
 CREATE TABLE IF NOT EXISTS `role_permissions` (

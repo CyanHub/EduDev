@@ -2,7 +2,7 @@ package initialize
 
 import (
 	"FileSystem/global"
-	"FileSystem/model"
+	// "FileSystem/model"
 	"fmt"
 	"log"
 
@@ -12,15 +12,15 @@ import (
 )
 
 // AutoMigrate 自动迁移数据库表结构
-func AutoMigrate(db *gorm.DB) error {
-	return db.AutoMigrate(
-		&model.User{},
-		&model.OperationRecord{},
-		&model.Role{},
-		&model.Article{},
-		&model.Subject{},
-	)
-}
+// func AutoMigrate(db *gorm.DB) error {
+// 	return db.AutoMigrate(
+// 		&model.User{},
+// 		&model.OperationRecord{},
+// 		&model.Role{},
+// 		&model.Article{},
+// 		&model.Subject{},
+// 	)
+// }
 
 // MustLoadGorm 初始化 GORM 数据库连接，若失败则终止程序
 func MustLoadGorm() {

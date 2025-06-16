@@ -3,8 +3,6 @@ package initialize
 
 import (
 	"FileSystem/global"
-	// "FileSystem/initialize/task"
-	"FileSystem/router"
 	"fmt"
 	"net/http"
 	_ "net/http/pprof"
@@ -16,29 +14,9 @@ import (
 // MustRunWindowServer 启动服务
 // 启动服务
 // @Description: 启动服务
-func MustRunWindowServer() {
+func MustRunWindowServer(engine *gin.Engine) {
 	global.Cron = cron.New()
 	global.Cron.Start()
-
-	engine := gin.Default()
-
-	// 添加静态文件路由
-	engine.Static("/static", "./pages")
-	engine.StaticFile("/", "./pages/index.html")
-	engine.StaticFile("/index.html", "./pages/index.html")
-	engine.StaticFile("/login.html", "./pages/login.html")
-	engine.StaticFile("/register.html", "./pages/register.html")
-	// 添加以下路由
-	engine.GET("/register", func(c *gin.Context) {
-	    c.File("./pages/register.html")
-	})
-	engine.StaticFile("/list.html", "./pages/list.html")
-	
-	userGroup := router.UserGroup{}
-	userGroup.InitUserRouters(engine)
-
-	roleGroup := router.RoleGroup{}
-	roleGroup.InitRoleRouters(engine)
 
 	address := fmt.Sprintf(":%d", global.CONFIG.App.Port) // 设置服务器监听的端口
 

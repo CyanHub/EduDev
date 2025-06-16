@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 
 	"FileSystem/global"
 	"FileSystem/model"
@@ -21,13 +22,13 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func calculateSum(n int) int {
-	sum := 0
-	for i := 0; i < n; i++ { // 模拟业务输出逻辑
-		sum += i
-	}
-	return sum
-}
+// func calculateSum(n int) int {
+// 	sum := 0
+// 	for i := 0; i < n; i++ { // 模拟业务输出逻辑
+// 		sum += i
+// 	}
+// 	return sum
+// }
 
 // Login 用户登录
 func Login(c *gin.Context) {
@@ -71,8 +72,7 @@ func Login(c *gin.Context) {
 	}, c)
 }
 
-// 修改前（处理FormData）
-
+// Register 用户注册
 func Register(c *gin.Context) {
 	var req request.UserRegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -89,47 +89,55 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// var req request.UserRegisterRequest
-	// // 修改为FormData格式接收
-	// if err := c.ShouldBind(&req); err != nil {
-	// 	global.Logger.Error("参数错误",
-	// 		zap.Error(err),
-	// 		zap.Any("formData", c.Request.PostForm))
-	// 	response.FailWithMessage(utils.Translate(err), c)
-	// 	return
-	// }
-
-	// // 添加文件处理逻辑
-	// if fileHeader, err := c.FormFile("avatarFile"); err == nil {
-	// 	// 这里添加文件保存逻辑
-	// 	req.Avatar = "uploads/" + fileHeader.Filename // 示例存储路径
-	// }
-
-	// // 修改为ShouldBindJSON接收JSON格式数据
-	// if err := c.ShouldBindJSON(&req); err != nil {
-	// 	global.Logger.Error("参数错误",
-	// 		zap.Error(err),
-	// 		zap.Any("requestBody", c.Request.Body))
-	// 	response.FailWithMessage(utils.Translate(err), c)
-	// 	return
-	// }
-
-	// 添加参数验证日志
-	global.Logger.Info("注册请求参数",
-		zap.String("username", req.Username),
-		zap.String("email", req.Email),
-		zap.String("phone", req.Phone))
-
-	user, err := service.UserServiceApp.Register(req)
-	if err != nil {
-		if errors.Is(err, global.ErrUserAlreadyExists) {
-			response.FailWithMessage(err.Error(), c)
-			return
-		} else {
-			log.Println("注册失败: ", err)
-			response.FailWithMessage("注册失败", c)
+	// 检查是否有创建管理员账号的权限
+	if req.RoleId == 1 { // 假设 1 是管理员角色 ID
+		claims, err := utils.GetClaims(c)
+		if err != nil ||!service.UserServiceApp.IsAdmin(claims.UserID) {
+			response.FailWithMessage("没有权限创建管理员账号", c)
 			return
 		}
+	}
+
+	// 开启事务
+	err := global.DB.Transaction(func(tx *gorm.DB) error {
+		// 创建用户
+		user := &model.User{
+			Username: req.Username,
+			Password: req.Password,
+			NickName: req.NickName,
+			Email:    req.Email,
+			Phone:    req.Phone,
+			RoleId:   req.RoleId,
+		}
+		if err := tx.Create(user).Error; err != nil {
+			return err
+		}
+
+		// 分配角色
+		var role model.Role
+		if err := tx.Where("id = ?", req.RoleId).First(&role).Error; err != nil {
+			return err
+		}
+
+		userRole := &model.UserRole{
+			UserID: user.ID,
+			RoleID: role.ID,
+		}
+		if err := tx.Create(userRole).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		global.Logger.Error("注册失败", zap.Error(err))
+		if err == model.RecordNotFound {
+			response.FailWithMessage("指定角色不存在", c)
+		} else {
+			response.FailWithMessage("注册失败", c)
+		}
+		return
 	}
 
 	// 记录操作日志
@@ -140,9 +148,9 @@ func Register(c *gin.Context) {
 
 	// 注册成功后，自动登录
 	claims := model.BaseClaims{
-		UserID:   user.ID,
-		Username: user.Username,
-		RoleID:   user.RoleId,
+		UserID:   req.ID,
+		Username: req.Username,
+		RoleID:   2, // 假设默认角色 ID 为 2
 	}
 	token, err := utils.NewJWT().CreateToken(claims)
 	if err != nil {
@@ -156,13 +164,11 @@ func Register(c *gin.Context) {
 		"token":  token,
 		"expire": time.Now().Add(time.Duration(global.CONFIG.Jwt.ExpireTime) * time.Second).Unix(),
 		"user": gin.H{
-			"username": user.Username,
-			"role":     user.RoleId,
-			"email":    user.Email,
-			"phone":    user.Phone,
-			"nickname": user.NickName,
-			"createAt": user.CreatedAt,
-			"updateAt": user.UpdatedAt,
+			"username": req.Username,
+			"role":     2, // 假设默认角色 ID 为 2
+			"email":    req.Email,
+			"phone":    req.Phone,
+			"nickname": req.NickName,
 		},
 	}, "注册成功", c)
 }
@@ -308,7 +314,7 @@ func Logout(c *gin.Context) {
 
 // 新增用户信息接口
 func UserInfo(c *gin.Context) {
-	
+
 	// 修复声明获取方式
 	claims, err := utils.GetClaims(c)
 	if err != nil {
@@ -332,3 +338,26 @@ func UserInfo(c *gin.Context) {
 	}, c)
 }
 
+// GetUserAvatar 获取用户头像信息
+func GetUserAvatar(c *gin.Context) {
+	username := c.Query("username")
+	if username == "" {
+		response.FailWithMessage("用户名不能为空", c)
+		return
+	}
+
+	var user model.User
+	if err := global.DB.Where("username = ?", username).First(&user).Error; err != nil {
+		if errors.Is(err, global.ErrUserNotFound) {
+			response.FailWithMessage("用户不存在", c)
+		} else {
+			global.Logger.Error("查询用户信息失败", zap.Error(err))
+			response.FailWithMessage("查询用户信息失败", c)
+		}
+		return
+	}
+
+	response.OkWithDetailed(gin.H{
+		"avatar": user.Avatar,
+	}, "获取头像信息成功", c)
+}

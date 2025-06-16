@@ -10,38 +10,19 @@ import (
 func InitRouter() *gin.Engine {
 	r := gin.Default()
 
-	// 新增CORS配置
-	r.Use(func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-		c.Next()
-	})
+	// 静态文件服务
+	r.Static("/static", "./static")
+	r.Static("/css", "./static/css")
+	r.Static("/images", "./static/images")
+	r.Static("/js", "./static/js")
 
-	// 添加静态文件路由
-	// 修改静态文件路由配置
-	r.Static("/static", "./static") // 将原有/static路由指向static目录
-	r.Static("/uploads", "./uploads")
-
-	// 新增头像资源路由（确保存在static/images/avatar目录）
-	// 在静态文件路由部分添加
-	r.Static("/static/images", "./static/images") // 头像资源路径
-	// 新增css资源路由
-	// r.Static("/css", "./static/css")
-
-	// 添加审计中间件
-	// r.Use(middleware.OperationRecord())
-
-	// 修改页面路由配置
-	r.StaticFile("/list.html", "./pages/list.html")
-	r.StaticFile("/index.html", "./pages/index.html")
-	r.StaticFile("/login.html", "./pages/login.html")
-	r.StaticFile("/register.html", "./pages/register.html")
-	r.StaticFile("/logout.html", "./pages/logout.html") // 确保路径正确
+	// 页面路由
+	r.StaticFile("/", "./static/pages/index.html")
+	r.StaticFile("/index.html", "./static/pages/index.html")
+	r.StaticFile("/register.html", "./static/pages/register.html")
+	r.StaticFile("/login.html", "./static/pages/login.html")
+	r.StaticFile("/list.html", "./static/pages/list.html")
+	r.StaticFile("/logout.html", "./static/pages/logout.html")
 
 	// API路由组
 	apiGroup := r.Group("/api")
@@ -54,6 +35,8 @@ func InitRouter() *gin.Engine {
 			userGroup.POST("/login", api.Login)
 			userGroup.POST("/register", api.Register) // 确保路由是/user/register
 			userGroup.POST("/logout", middleware.JwtMiddleware(), api.Logout)
+			// 确保添加了 /avatar 接口路由
+			userGroup.GET("/avatar", api.GetUserAvatar) 
 		}
 
 		// 文件相关路由（需要JWT和Casbin验证）
@@ -75,15 +58,24 @@ func InitRouter() *gin.Engine {
 			roleGroup.POST("/roles", api.CreateRole)
 			roleGroup.POST("/assign-permissions", api.AssignPermissions)
 		}
-
-		// 新增管理员路由组
-		// adminGroup := apiGroup.Group("/admin").Use(middleware.AdminCheck())
-		// {
-		// 	adminGroup.POST("/roles", api.CreateRole)
-		// 	adminGroup.POST("/assign-permissions", api.AssignPermissions)
-		// }
 	}
 
+	// 新增CORS配置
+	r.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	})
+
+	// 使用GET方法 添加以下路由（暂时冗余）
+	// r.GET("/register", func(c *gin.Context) {
+	// 	c.File("./pages/register.html")
+	// })
 
 	return r
 }

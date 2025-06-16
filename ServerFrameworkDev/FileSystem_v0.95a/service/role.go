@@ -2,7 +2,7 @@ package service
 
 import (
 	"FileSystem/global"
-	"FileSystem/model"
+	"FileSystem/model" // 确保路径正确
 	"FileSystem/model/request"
 
 	"gorm.io/gorm"
@@ -81,7 +81,8 @@ func (r *RoleService) CheckPermission(userID uint64, permission string) (bool, e
 	var count int64
 	err := global.DB.Model(&model.UserRole{}).
 		Joins("JOIN role_permissions ON role_permissions.role_id = user_roles.role_id").
-		Where("user_roles.user_id = ? AND role_permissions.permission = ?", userID, permission).
+		Joins("JOIN permissions ON permissions.id = role_permissions.permission_id").
+		Where("user_roles.user_id = ? AND permissions.code = ?", userID, permission).
 		Count(&count).Error
 
 	return count > 0, err
