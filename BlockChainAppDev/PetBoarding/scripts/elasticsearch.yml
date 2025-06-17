@@ -1,0 +1,73 @@
+# 宠物寄养系统Elasticsearch配置文件
+
+# 集群设置
+cluster:
+  name: petboarding-elk
+
+# 节点设置
+node:
+  name: petboarding-node-1
+  master: true
+  data: true
+  ingest: true
+
+# 网络设置
+network:
+  host: 0.0.0.0
+  port: 9200
+  publish_host: _site_
+
+# 路径设置
+path:
+  data: /var/lib/elasticsearch/data
+  logs: /var/log/elasticsearch
+
+# 内存设置
+bootstrap:
+  memory_lock: true
+
+# HTTP设置
+http:
+  port: 9200
+  compression: true
+
+# 发现设置
+discovery:
+  type: single-node
+
+# 安全设置
+xpack:
+  security:
+    enabled: false
+
+# 索引设置
+indices:
+  query:
+    bool:
+      max_clause_count: 1024
+  fielddata:
+    cache:
+      size: 20%
+  breaker:
+    fielddata:
+      limit: 60%
+    request:
+      limit: 40%
+    total:
+      limit: 70%
+
+# 线程池设置
+thread_pool:
+  search:
+    size: 5
+    queue_size: 1000
+  write:
+    size: 5
+    queue_size: 1000
+
+# 索引生命周期管理
+xpack.ilm.enabled: true
+
+# 监控设置
+xpack.monitoring.enabled: true
+xpack.monitoring.collection.enabled: true

@@ -1,0 +1,64 @@
+{
+  "datacenter": "petboarding-dc",
+  "data_dir": "/consul/data",
+  "log_level": "INFO",
+  "node_name": "petboarding-consul",
+  "server": true,
+  "bootstrap_expect": 1,
+  "ui_config": {
+    "enabled": true
+  },
+  "client_addr": "0.0.0.0",
+  "bind_addr": "0.0.0.0",
+  "advertise_addr": "{{ GetInterfaceIP \"eth0\" }}",
+  "ports": {
+    "http": 8500,
+    "https": -1,
+    "grpc": 8502
+  },
+  "connect": {
+    "enabled": true
+  },
+  "acl": {
+    "enabled": false,
+    "default_policy": "allow",
+    "enable_token_persistence": true
+  },
+  "performance": {
+    "raft_multiplier": 1
+  },
+  "telemetry": {
+    "disable_hostname": true,
+    "prometheus_retention_time": "24h"
+  },
+  "service": {
+    "name": "consul",
+    "tags": ["petboarding", "service-discovery"],
+    "check": {
+      "id": "consul-health",
+      "name": "Consul Health Check",
+      "http": "http://localhost:8500/v1/status/leader",
+      "interval": "10s",
+      "timeout": "1s"
+    }
+  },
+  "watches": [],
+  "retry_join": [],
+  "dns_config": {
+    "allow_stale": true,
+    "max_stale": "10s",
+    "node_ttl": "30s",
+    "service_ttl": {
+      "*": "30s"
+    },
+    "enable_truncate": true,
+    "only_passing": true
+  },
+  "enable_script_checks": false,
+  "enable_local_script_checks": false,
+  "disable_update_check": true,
+  "leave_on_terminate": true,
+  "skip_leave_on_interrupt": true,
+  "rejoin_after_leave": true,
+  "recursors": ["8.8.8.8", "8.8.4.4"]
+}

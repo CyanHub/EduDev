@@ -1,0 +1,76 @@
+# 宠物寄养系统Kibana配置文件
+
+# 服务器设置
+server:
+  port: 5601
+  host: "0.0.0.0"
+  name: "petboarding-kibana"
+  basePath: ""
+  rewriteBasePath: false
+
+# Elasticsearch连接设置
+elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  username: ""
+  password: ""
+  requestTimeout: 30000
+  shardTimeout: 30000
+
+# Kibana设置
+kibana:
+  index: ".kibana"
+  defaultAppId: "home"
+
+# 监控设置
+monitoring:
+  ui:
+    container:
+      elasticsearch:
+        enabled: true
+
+# 日志设置
+logging:
+  verbose: false
+  json: true
+
+# 安全设置
+xpack:
+  security:
+    enabled: false
+  reporting:
+    enabled: true
+    encryptionKey: "a_random_string_of_at_least_32_characters"
+  graph:
+    enabled: true
+  monitoring:
+    enabled: true
+    ui:
+      container:
+        elasticsearch:
+          enabled: true
+
+# 可视化设置
+visualize:
+  listingLimit: 100
+
+# 仪表盘设置
+dashboard:
+  quota:
+    value: 100
+
+# 保存的对象设置
+savedObjects:
+  maxImportPayloadBytes: 10485760
+
+# 搜索设置
+search:
+  timeout:
+    value: 30000
+
+# 遥测设置
+telemetry:
+  enabled: false
+
+# 国际化设置
+i18n:
+  locale: "zh-CN"

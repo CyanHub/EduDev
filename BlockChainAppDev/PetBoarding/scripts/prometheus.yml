@@ -1,0 +1,100 @@
+# 宠物寄养系统Prometheus配置文件
+
+global:
+  scrape_interval: 15s     # 默认抓取间隔，15秒向目标抓取一次数据
+  evaluation_interval: 15s # 每15秒评估一次规则
+
+  # 附加到所有时间序列或警报的标签
+  external_labels:
+    monitor: 'petboarding-monitor'
+
+# 告警配置
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+# 规则文件，可以包含记录规则或告警规则
+rule_files:
+  - "alert_rules.yml"
+
+# 抓取配置
+scrape_configs:
+  # Prometheus自身的监控配置
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # API网关监控
+  - job_name: 'api-gateway'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['api-gateway:8080']
+    scrape_interval: 10s
+
+  # 用户服务监控
+  - job_name: 'user-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['user-service:8081']
+    scrape_interval: 10s
+
+  # 宠物服务监控
+  - job_name: 'pet-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['pet-service:8082']
+    scrape_interval: 10s
+
+  # 寄养服务监控
+  - job_name: 'boarding-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['boarding-service:8083']
+    scrape_interval: 10s
+
+  # 评价服务监控
+  - job_name: 'review-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['review-service:8084']
+    scrape_interval: 10s
+
+  # 通知服务监控
+  - job_name: 'notification-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['notification-service:8085']
+    scrape_interval: 10s
+
+  # 管理员服务监控
+  - job_name: 'admin-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['admin-service:8086']
+    scrape_interval: 10s
+
+  # Node Exporter监控（主机指标）
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # MySQL监控
+  - job_name: 'mysql-exporter'
+    static_configs:
+      - targets: ['mysql-exporter:9104']
+
+  # Redis监控
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+
+  # Kafka监控
+  - job_name: 'kafka-exporter'
+    static_configs:
+      - targets: ['kafka-exporter:9308']
+
+  # cAdvisor监控（容器指标）
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']

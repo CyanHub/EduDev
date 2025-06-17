@@ -1,0 +1,2493 @@
+# 宠物寄养系统API文档 - Swagger定义
+
+openapi: 3.0.0
+info:
+  title: 宠物寄养系统API
+  description: |
+    宠物寄养系统的RESTful API文档，包含用户、宠物、寄养服务、订单、评价和通知等功能。
+    
+    ## 认证
+    大部分API需要通过JWT令牌进行认证，请在请求头中添加`Authorization: Bearer {token}`。
+    
+    ## 错误处理
+    所有API响应均使用统一的格式，错误时会返回相应的错误码和错误信息。
+  version: 1.0.0
+  contact:
+    name: 宠物寄养系统团队
+    email: support@petboarding.example.com
+
+servers:
+  - url: http://localhost:8080/api
+    description: 本地开发环境
+  - url: https://api.petboarding.example.com/api
+    description: 生产环境
+
+tags:
+  - name: 用户
+    description: 用户相关操作
+  - name: 宠物
+    description: 宠物相关操作
+  - name: 寄养服务
+    description: 寄养服务相关操作
+  - name: 订单
+    description: 订单相关操作
+  - name: 评价
+    description: 评价相关操作
+  - name: 通知
+    description: 通知相关操作
+  - name: 管理员
+    description: 管理员相关操作
+
+paths:
+  # 用户服务API
+  /users/register:
+    post:
+      tags:
+        - 用户
+      summary: 注册用户
+      description: 注册新用户
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterRequest'
+      responses:
+        '200':
+          description: 注册成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/login:
+    post:
+      tags:
+        - 用户
+      summary: 用户登录
+      description: 用户登录并获取令牌
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLoginResponse'
+        '401':
+          description: 登录失败
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{userId}:
+    get:
+      tags:
+        - 用户
+      summary: 获取用户信息
+      description: 获取指定用户的信息
+      operationId: getUserInfo
+      parameters:
+        - name: userId
+          in: path
+          description: 用户ID
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取用户信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+        '404':
+          description: 用户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - 用户
+      summary: 更新用户信息
+      description: 更新指定用户的信息
+      operationId: updateUserInfo
+      parameters:
+        - name: userId
+          in: path
+          description: 用户ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 用户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # 宠物服务API
+  /pets:
+    post:
+      tags:
+        - 宠物
+      summary: 添加宠物
+      description: 添加新宠物
+      operationId: addPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetCreateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 添加成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /pets/{petId}:
+    get:
+      tags:
+        - 宠物
+      summary: 获取宠物信息
+      description: 获取指定宠物的信息
+      operationId: getPetInfo
+      parameters:
+        - name: petId
+          in: path
+          description: 宠物ID
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取宠物信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '404':
+          description: 宠物不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - 宠物
+      summary: 更新宠物信息
+      description: 更新指定宠物的信息
+      operationId: updatePetInfo
+      parameters:
+        - name: petId
+          in: path
+          description: 宠物ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetUpdateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 宠物不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - 宠物
+      summary: 删除宠物
+      description: 删除指定宠物
+      operationId: deletePet
+      parameters:
+        - name: petId
+          in: path
+          description: 宠物ID
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: 宠物不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /pets/user/{userId}:
+    get:
+      tags:
+        - 宠物
+      summary: 获取用户的所有宠物
+      description: 获取指定用户的所有宠物
+      operationId: getUserPets
+      parameters:
+        - name: userId
+          in: path
+          description: 用户ID
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取用户的所有宠物
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetListResponse'
+        '404':
+          description: 用户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # 寄养服务API
+  /boarding:
+    post:
+      tags:
+        - 寄养服务
+      summary: 创建寄养服务
+      description: 创建新的寄养服务
+      operationId: createBoardingService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardingServiceCreateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardingServiceResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /boarding/{serviceId}:
+    get:
+      tags:
+        - 寄养服务
+      summary: 获取寄养服务信息
+      description: 获取指定寄养服务的信息
+      operationId: getBoardingServiceInfo
+      parameters:
+        - name: serviceId
+          in: path
+          description: 服务ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功获取寄养服务信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardingServiceResponse'
+        '404':
+          description: 寄养服务不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - 寄养服务
+      summary: 更新寄养服务信息
+      description: 更新指定寄养服务的信息
+      operationId: updateBoardingServiceInfo
+      parameters:
+        - name: serviceId
+          in: path
+          description: 服务ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardingServiceUpdateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardingServiceResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 寄养服务不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /boarding/search:
+    get:
+      tags:
+        - 寄养服务
+      summary: 搜索寄养服务
+      description: 搜索寄养服务
+      operationId: searchBoardingServices
+      parameters:
+        - name: pet_type
+          in: query
+          description: 宠物类型
+          required: false
+          schema:
+            type: string
+        - name: location
+          in: query
+          description: 位置关键词
+          required: false
+          schema:
+            type: string
+        - name: min_price
+          in: query
+          description: 最低价格
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: max_price
+          in: query
+          description: 最高价格
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: start_date
+          in: query
+          description: 开始日期 (YYYY-MM-DD)
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: 结束日期 (YYYY-MM-DD)
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: page
+          in: query
+          description: 页码，默认1
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量，默认10
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: 搜索成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardingServiceListResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # 订单服务API
+  /orders:
+    post:
+      tags:
+        - 订单
+      summary: 创建订单
+      description: 创建新订单
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /orders/{orderId}:
+    get:
+      tags:
+        - 订单
+      summary: 获取订单信息
+      description: 获取指定订单的信息
+      operationId: getOrderInfo
+      parameters:
+        - name: orderId
+          in: path
+          description: 订单ID
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取订单信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '404':
+          description: 订单不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /orders/user/{userId}:
+    get:
+      tags:
+        - 订单
+      summary: 获取用户的所有订单
+      description: 获取指定用户的所有订单
+      operationId: getUserOrders
+      parameters:
+        - name: userId
+          in: path
+          description: 用户ID
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 订单状态过滤
+          required: false
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: 页码，默认1
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量，默认10
+          required: false
+          schema:
+            type: integer
+            default: 10
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取用户的所有订单
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+        '404':
+          description: 用户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /orders/provider/{providerId}:
+    get:
+      tags:
+        - 订单
+      summary: 获取服务提供者的所有订单
+      description: 获取指定服务提供者的所有订单
+      operationId: getProviderOrders
+      parameters:
+        - name: providerId
+          in: path
+          description: 服务提供者ID
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 订单状态过滤
+          required: false
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: 页码，默认1
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量，默认10
+          required: false
+          schema:
+            type: integer
+            default: 10
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取服务提供者的所有订单
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+        '404':
+          description: 服务提供者不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /orders/{orderId}/status:
+    put:
+      tags:
+        - 订单
+      summary: 更新订单状态
+      description: 更新订单状态
+      operationId: updateOrderStatus
+      parameters:
+        - name: orderId
+          in: path
+          description: 订单ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderStatusUpdateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderStatusResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 订单不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /orders/{orderId}/cancel:
+    put:
+      tags:
+        - 订单
+      summary: 取消订单
+      description: 取消订单
+      operationId: cancelOrder
+      parameters:
+        - name: orderId
+          in: path
+          description: 订单ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCancelRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 取消成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderStatusResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 订单不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # 评价服务API
+  /reviews:
+    post:
+      tags:
+        - 评价
+      summary: 创建评价
+      description: 创建新评价
+      operationId: createReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewCreateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /reviews/{reviewId}:
+    get:
+      tags:
+        - 评价
+      summary: 获取评价信息
+      description: 获取指定评价的信息
+      operationId: getReviewInfo
+      parameters:
+        - name: reviewId
+          in: path
+          description: 评价ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功获取评价信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '404':
+          description: 评价不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /reviews/service/{serviceId}:
+    get:
+      tags:
+        - 评价
+      summary: 获取服务的所有评价
+      description: 获取指定服务的所有评价
+      operationId: getServiceReviews
+      parameters:
+        - name: serviceId
+          in: path
+          description: 服务ID
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: 页码，默认1
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量，默认10
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: 成功获取服务的所有评价
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewListResponse'
+        '404':
+          description: 服务不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /reviews/user/{userId}:
+    get:
+      tags:
+        - 评价
+      summary: 获取用户的所有评价
+      description: 获取指定用户的所有评价
+      operationId: getUserReviews
+      parameters:
+        - name: userId
+          in: path
+          description: 用户ID
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: 页码，默认1
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量，默认10
+          required: false
+          schema:
+            type: integer
+            default: 10
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取用户的所有评价
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewListResponse'
+        '404':
+          description: 用户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # 通知服务API
+  /notifications/user/{userId}:
+    get:
+      tags:
+        - 通知
+      summary: 获取用户的所有通知
+      description: 获取指定用户的所有通知
+      operationId: getUserNotifications
+      parameters:
+        - name: userId
+          in: path
+          description: 用户ID
+          required: true
+          schema:
+            type: string
+        - name: read
+          in: query
+          description: 是否已读，0-未读，1-已读
+          required: false
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: 页码，默认1
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量，默认10
+          required: false
+          schema:
+            type: integer
+            default: 10
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取用户的所有通知
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationListResponse'
+        '404':
+          description: 用户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /notifications/{notificationId}:
+    get:
+      tags:
+        - 通知
+      summary: 获取通知详情
+      description: 获取指定通知的详情
+      operationId: getNotificationInfo
+      parameters:
+        - name: notificationId
+          in: path
+          description: 通知ID
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取通知详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationResponse'
+        '404':
+          description: 通知不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /notifications/{notificationId}/read:
+    put:
+      tags:
+        - 通知
+      summary: 标记通知为已读
+      description: 标记指定通知为已读
+      operationId: markNotificationAsRead
+      parameters:
+        - name: notificationId
+          in: path
+          description: 通知ID
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 标记成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: 通知不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /notifications/user/{userId}/read-all:
+    put:
+      tags:
+        - 通知
+      summary: 标记所有通知为已读
+      description: 标记指定用户的所有通知为已读
+      operationId: markAllNotificationsAsRead
+      parameters:
+        - name: userId
+          in: path
+          description: 用户ID
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 标记成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: 用户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # 管理员服务API
+  /admin/login:
+    post:
+      tags:
+        - 管理员
+      summary: 管理员登录
+      description: 管理员登录并获取令牌
+      operationId: adminLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminLoginRequest'
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminLoginResponse'
+        '401':
+          description: 登录失败
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/dashboard:
+    get:
+      tags:
+        - 管理员
+      summary: 获取系统统计数据
+      description: 获取系统统计数据
+      operationId: getDashboardData
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取系统统计数据
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/users:
+    get:
+      tags:
+        - 管理员
+      summary: 获取所有用户
+      description: 获取所有用户
+      operationId: getAllUsers
+      parameters:
+        - name: role
+          in: query
+          description: 角色过滤
+          required: false
+          schema:
+            type: integer
+        - name: status
+          in: query
+          description: 状态过滤
+          required: false
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: 页码，默认1
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量，默认10
+          required: false
+          schema:
+            type: integer
+            default: 10
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取所有用户
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/users/{userId}/status:
+    put:
+      tags:
+        - 管理员
+      summary: 审核用户
+      description: 更新用户状态
+      operationId: updateUserStatus
+      parameters:
+        - name: userId
+          in: path
+          description: 用户ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStatusUpdateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStatusResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 用户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/services:
+    get:
+      tags:
+        - 管理员
+      summary: 获取所有服务
+      description: 获取所有寄养服务
+      operationId: getAllServices
+      parameters:
+        - name: pet_type
+          in: query
+          description: 宠物类型过滤
+          required: false
+          schema:
+            type: string
+        - name: available
+          in: query
+          description: 可用状态过滤
+          required: false
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: 页码，默认1
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: 每页数量，默认10
+          required: false
+          schema:
+            type: integer
+            default: 10
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取所有服务
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardingServiceListResponse'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/services/{serviceId}/status:
+    put:
+      tags:
+        - 管理员
+      summary: 审核服务
+      description: 更新服务状态
+      operationId: updateServiceStatus
+      parameters:
+        - name: serviceId
+          in: path
+          description: 服务ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceStatusUpdateRequest'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatusResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 服务不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # 健康检查
+  /health:
+    get:
+      tags:
+        - 系统
+      summary: 健康检查
+      description: 检查服务健康状态
+      operationId: healthCheck
+      responses:
+        '200':
+          description: 服务正常
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # 通用响应
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          nullable: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: "Invalid parameters"
+        data:
+          type: object
+          nullable: true
+
+    # 用户相关
+    UserRegisterRequest:
+      type: object
+      required:
+        - username
+        - password
+        - email
+      properties:
+        username:
+          type: string
+          example: "johndoe"
+        password:
+          type: string
+          example: "password123"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+        phone:
+          type: string
+          example: "1234567890"
+        role:
+          type: integer
+          enum: [0, 1]
+          default: 0
+          example: 0
+
+    UserLoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: "johndoe"
+        password:
+          type: string
+          example: "password123"
+
+    UserLoginResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            user_id:
+              type: string
+              example: "u123456789"
+            username:
+              type: string
+              example: "johndoe"
+            role:
+              type: integer
+              example: 0
+            token:
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            expires_at:
+              type: string
+              format: date-time
+              example: "2023-06-02T12:00:00Z"
+
+    UserInfoResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            user_id:
+              type: string
+              example: "u123456789"
+            username:
+              type: string
+              example: "johndoe"
+            email:
+              type: string
+              example: "john@example.com"
+            phone:
+              type: string
+              example: "1234567890"
+            role:
+              type: integer
+              example: 0
+            status:
+              type: integer
+              example: 1
+            created_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T12:00:00Z"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T12:00:00Z"
+
+    UserUpdateRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: "newemail@example.com"
+        phone:
+          type: string
+          example: "9876543210"
+        password:
+          type: string
+          example: "newpassword123"
+
+    UserListResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 1000
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 10
+            users:
+              type: array
+              items:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                    example: "u123456789"
+                  username:
+                    type: string
+                    example: "johndoe"
+                  email:
+                    type: string
+                    example: "john@example.com"
+                  phone:
+                    type: string
+                    example: "1234567890"
+                  role:
+                    type: integer
+                    example: 0
+                  status:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2023-06-01T12:00:00Z"
+
+    UserStatusUpdateRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: integer
+          enum: [0, 1, 2]
+          example: 1
+
+    UserStatusResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "User status updated successfully"
+        data:
+          type: object
+          properties:
+            user_id:
+              type: string
+              example: "u123456789"
+            status:
+              type: integer
+              example: 1
+            updated_at:
+              type: string
+              format: date-time
+              example: "2023-06-02T11:00:00Z"
+
+    # 宠物相关
+    PetCreateRequest:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+          example: "Buddy"
+        type:
+          type: string
+          example: "Dog"
+        breed:
+          type: string
+          example: "Golden Retriever"
+        age:
+          type: integer
+          example: 3
+        gender:
+          type: integer
+          enum: [0, 1, 2]
+          example: 1
+        weight:
+          type: number
+          format: float
+          example: 25.5
+        description:
+          type: string
+          example: "Friendly and energetic"
+
+    PetResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            pet_id:
+              type: string
+              example: "p123456789"
+            user_id:
+              type: string
+              example: "u123456789"
+            name:
+              type: string
+              example: "Buddy"
+            type:
+              type: string
+              example: "Dog"
+            breed:
+              type: string
+              example: "Golden Retriever"
+            age:
+              type: integer
+              example: 3
+            gender:
+              type: integer
+              example: 1
+            weight:
+              type: number
+              format: float
+              example: 25.5
+            description:
+              type: string
+              example: "Friendly and energetic"
+            created_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T14:00:00Z"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T14:00:00Z"
+
+    PetUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Buddy Jr"
+        age:
+          type: integer
+          example: 4
+        weight:
+          type: number
+          format: float
+          example: 26.2
+        description:
+          type: string
+          example: "Very friendly and energetic"
+
+    PetListResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              pet_id:
+                type: string
+                example: "p123456789"
+              user_id:
+                type: string
+                example: "u123456789"
+              name:
+                type: string
+                example: "Buddy"
+              type:
+                type: string
+                example: "Dog"
+              breed:
+                type: string
+                example: "Golden Retriever"
+              age:
+                type: integer
+                example: 3
+              gender:
+                type: integer
+                example: 1
+              weight:
+                type: number
+                format: float
+                example: 25.5
+              description:
+                type: string
+                example: "Friendly and energetic"
+              created_at:
+                type: string
+                format: date-time
+                example: "2023-06-01T14:00:00Z"
+              updated_at:
+                type: string
+                format: date-time
+                example: "2023-06-01T14:00:00Z"
+
+    # 寄养服务相关
+    BoardingServiceCreateRequest:
+      type: object
+      required:
+        - title
+        - price
+        - location
+        - pet_type
+        - capacity
+      properties:
+        title:
+          type: string
+          example: "Luxury Pet Boarding"
+        price:
+          type: number
+          format: float
+          example: 50.00
+        location:
+          type: string
+          example: "123 Main St, City"
+        pet_type:
+          type: string
+          example: "Dog"
+        capacity:
+          type: integer
+          example: 5
+        description:
+          type: string
+          example: "Luxury boarding with premium care"
+        facilities:
+          type: array
+          items:
+            type: string
+          example: ["Air Conditioning", "Heated Floors", "Outdoor Play Area"]
+        services:
+          type: array
+          items:
+            type: string
+          example: ["Daily Walks", "Grooming", "Training"]
+        rules:
+          type: string
+          example: "Pets must be vaccinated and friendly"
+
+    BoardingServiceResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            service_id:
+              type: string
+              example: "s123456789"
+            provider_id:
+              type: string
+              example: "u123456789"
+            provider_name:
+              type: string
+              example: "John Doe"
+            title:
+              type: string
+              example: "Luxury Pet Boarding"
+            price:
+              type: number
+              format: float
+              example: 50.00
+            location:
+              type: string
+              example: "123 Main St, City"
+            pet_type:
+              type: string
+              example: "Dog"
+            capacity:
+              type: integer
+              example: 5
+            available:
+              type: integer
+              example: 1
+            rating:
+              type: number
+              format: float
+              example: 4.8
+            review_count:
+              type: integer
+              example: 25
+            description:
+              type: string
+              example: "Luxury boarding with premium care"
+            facilities:
+              type: array
+              items:
+                type: string
+              example: ["Air Conditioning", "Heated Floors", "Outdoor Play Area"]
+            services:
+              type: array
+              items:
+                type: string
+              example: ["Daily Walks", "Grooming", "Training"]
+            rules:
+              type: string
+              example: "Pets must be vaccinated and friendly"
+            photos:
+              type: array
+              items:
+                type: string
+              example: ["url1.jpg", "url2.jpg"]
+            created_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T17:00:00Z"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T17:00:00Z"
+
+    BoardingServiceUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Premium Luxury Pet Boarding"
+        price:
+          type: number
+          format: float
+          example: 55.00
+        capacity:
+          type: integer
+          example: 6
+        available:
+          type: integer
+          enum: [0, 1]
+          example: 0
+        description:
+          type: string
+          example: "Updated description"
+
+    BoardingServiceListResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 50
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 10
+            services:
+              type: array
+              items:
+                type: object
+                properties:
+                  service_id:
+                    type: string
+                    example: "s123456789"
+                  provider_id:
+                    type: string
+                    example: "u123456789"
+                  provider_name:
+                    type: string
+                    example: "John Doe"
+                  title:
+                    type: string
+                    example: "Luxury Pet Boarding"
+                  price:
+                    type: number
+                    format: float
+                    example: 50.00
+                  location:
+                    type: string
+                    example: "123 Main St, City"
+                  pet_type:
+                    type: string
+                    example: "Dog"
+                  capacity:
+                    type: integer
+                    example: 5
+                  rating:
+                    type: number
+                    format: float
+                    example: 4.8
+                  review_count:
+                    type: integer
+                    example: 25
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2023-06-01T17:00:00Z"
+
+    ServiceStatusUpdateRequest:
+      type: object
+      required:
+        - available
+      properties:
+        available:
+          type: integer
+          enum: [0, 1]
+          example: 1
+
+    ServiceStatusResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "Service status updated successfully"
+        data:
+          type: object
+          properties:
+            service_id:
+              type: string
+              example: "s123456789"
+            available:
+              type: integer
+              example: 1
+            updated_at:
+              type: string
+              format: date-time
+              example: "2023-06-02T12:00:00Z"
+
+    # 订单相关
+    OrderCreateRequest:
+      type: object
+      required:
+        - service_id
+        - pet_id
+        - start_date
+        - end_date
+      properties:
+        service_id:
+          type: string
+          example: "s123456789"
+        pet_id:
+          type: string
+          example: "p123456789"
+        start_date:
+          type: string
+          format: date
+          example: "2023-07-01"
+        end_date:
+          type: string
+          format: date
+          example: "2023-07-05"
+        special_requests:
+          type: string
+          example: "Please give medication twice daily"
+
+    OrderResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            order_id:
+              type: string
+              example: "o123456789"
+            user_id:
+              type: string
+              example: "u123456789"
+            service_id:
+              type: string
+              example: "s123456789"
+            pet_id:
+              type: string
+              example: "p123456789"
+            service_title:
+              type: string
+              example: "Luxury Pet Boarding"
+            pet_name:
+              type: string
+              example: "Buddy"
+            provider_id:
+              type: string
+              example: "u987654321"
+            provider_name:
+              type: string
+              example: "Jane Smith"
+            start_date:
+              type: string
+              format: date
+              example: "2023-07-01"
+            end_date:
+              type: string
+              format: date
+              example: "2023-07-05"
+            total_price:
+              type: number
+              format: float
+              example: 250.00
+            status:
+              type: integer
+              example: 1
+            payment_status:
+              type: integer
+              example: 1
+            special_requests:
+              type: string
+              example: "Please give medication twice daily"
+            care_notes:
+              type: string
+              example: "Pet is doing well, medication given as requested"
+            created_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T19:00:00Z"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T20:00:00Z"
+
+    OrderListResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 15
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 10
+            orders:
+              type: array
+              items:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                    example: "o123456789"
+                  service_id:
+                    type: string
+                    example: "s123456789"
+                  service_title:
+                    type: string
+                    example: "Luxury Pet Boarding"
+                  pet_id:
+                    type: string
+                    example: "p123456789"
+                  pet_name:
+                    type: string
+                    example: "Buddy"
+                  start_date:
+                    type: string
+                    format: date
+                    example: "2023-07-01"
+                  end_date:
+                    type: string
+                    format: date
+                    example: "2023-07-05"
+                  total_price:
+                    type: number
+                    format: float
+                    example: 250.00
+                  status:
+                    type: integer
+                    example: 1
+                  payment_status:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2023-06-01T19:00:00Z"
+
+    OrderStatusUpdateRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: integer
+          enum: [0, 1, 2, 3, 4]
+          example: 2
+        care_notes:
+          type: string
+          example: "Pet is doing well, enjoying daily walks"
+
+    OrderStatusResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            order_id:
+              type: string
+              example: "o123456789"
+            status:
+              type: integer
+              example: 2
+            care_notes:
+              type: string
+              example: "Pet is doing well, enjoying daily walks"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T21:00:00Z"
+
+    OrderCancelRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          example: "Change of plans"
+
+    # 评价相关
+    ReviewCreateRequest:
+      type: object
+      required:
+        - order_id
+        - rating
+      properties:
+        order_id:
+          type: string
+          example: "o123456789"
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+        content:
+          type: string
+          example: "Excellent service, my pet was very happy"
+        photos:
+          type: array
+          items:
+            type: string
+          example: ["url1.jpg", "url2.jpg"]
+
+    ReviewResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            review_id:
+              type: string
+              example: "r123456789"
+            order_id:
+              type: string
+              example: "o123456789"
+            user_id:
+              type: string
+              example: "u123456789"
+            user_name:
+              type: string
+              example: "John Doe"
+            service_id:
+              type: string
+              example: "s123456789"
+            service_title:
+              type: string
+              example: "Luxury Pet Boarding"
+            rating:
+              type: integer
+              example: 5
+            content:
+              type: string
+              example: "Excellent service, my pet was very happy"
+            photos:
+              type: array
+              items:
+                type: string
+              example: ["url1.jpg", "url2.jpg"]
+            created_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T23:00:00Z"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2023-06-01T23:00:00Z"
+
+    ReviewListResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 30
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 10
+            average_rating:
+              type: number
+              format: float
+              example: 4.8
+            reviews:
+              type: array
+              items:
+                type: object
+                properties:
+                  review_id:
+                    type: string
+                    example: "r123456789"
+                  user_id:
+                    type: string
+                    example: "u123456789"
+                  user_name:
+                    type: string
+                    example: "John Doe"
+                  service_id:
+                    type: string
+                    example: "s123456789"
+                  service_title:
+                    type: string
+                    example: "Luxury Pet Boarding"
+                  rating:
+                    type: integer
+                    example: 5
+                  content:
+                    type: string
+                    example: "Excellent service, my pet was very happy"
+                  photos:
+                    type: array
+                    items:
+                      type: string
+                    example: ["url1.jpg", "url2.jpg"]
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2023-06-01T23:00:00Z"
+
+    # 通知相关
+    NotificationResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            notification_id:
+              type: string
+              example: "n123456789"
+            user_id:
+              type: string
+              example: "u123456789"
+            type:
+              type: integer
+              example: 1
+            title:
+              type: string
+              example: "订单状态更新"
+            content:
+              type: string
+              example: "您的订单 #o123456789 已被接受"
+            related_id:
+              type: string
+              example: "o123456789"
+            read:
+              type: integer
+              enum: [0, 1]
+              example: 0
+            created_at:
+              type: string
+              format: date-time
+              example: "2023-06-02T09:00:00Z"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2023-06-02T09:00:00Z"
+
+    NotificationListResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 20
+            unread_count:
+              type: integer
+              example: 5
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 10
+            notifications:
+              type: array
+              items:
+                type: object
+                properties:
+                  notification_id:
+                    type: string
+                    example: "n123456789"
+                  type:
+                    type: integer
+                    example: 1
+                  title:
+                    type: string
+                    example: "订单状态更新"
+                  content:
+                    type: string
+                    example: "您的订单 #o123456789 已被接受"
+                  related_id:
+                    type: string
+                    example: "o123456789"
+                  read:
+                    type: integer
+                    enum: [0, 1]
+                    example: 0
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2023-06-02T09:00:00Z"
+
+    # 管理员相关
+    AdminLoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: "admin"
+        password:
+          type: string
+          example: "admin123"
+
+    AdminLoginResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            admin_id:
+              type: string
+              example: "a123456789"
+            username:
+              type: string
+              example: "admin"
+            token:
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            expires_at:
+              type: string
+              format: date-time
+              example: "2023-06-02T12:00:00Z"
+
+    DashboardResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            user_count:
+              type: integer
+              example: 1000
+            service_count:
+              type: integer
+              example: 150
+            order_count:
+              type: integer
+              example: 500
+            order_stats:
+              type: object
+              properties:
+                pending:
+                  type: integer
+                  example: 50
+                in_progress:
+                  type: integer
+                  example: 100
+                completed:
+                  type: integer
+                  example: 300
+                cancelled:
+                  type: integer
+                  example: 50
+            revenue:
+              type: number
+              format: float
+              example: 25000.00
+            recent_orders:
+              type: array
+              items:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                    example: "o123456789"
+                  user_id:
+                    type: string
+                    example: "u123456789"
+                  service_id:
+                    type: string
+                    example: "s123456789"
+                  total_price:
+                    type: number
+                    format: float
+                    example: 250.00
+                  status:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2023-06-01T19:00:00Z"
+
+    # 健康检查
+    HealthResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            status:
+              type: string
+              example: "ok"
+            version:
+              type: string
+              example: "1.0.0"
+            services:
+              type: object
+              properties:
+                user_service:
+                  type: string
+                  example: "ok"
+                pet_service:
+                  type: string
+                  example: "ok"
+                boarding_service:
+                  type: string
+                  example: "ok"
+                order_service:
+                  type: string
+                  example: "ok"
+                review_service:
+                  type: string
+                  example: "ok"
+                notification_service:
+                  type: string
+                  example: "ok"
+                admin_service:
+                  type: string
+                  example: "ok"
+            timestamp:
+              type: string
+              format: date-time
+              example: "2023-06-02T12:00:00Z"

@@ -1,0 +1,531 @@
+# 宠物寄养系统扩展版Docker Compose配置
+# 包含所有微服务和基础设施组件
+
+version: '3.8'
+
+services:
+  # 核心微服务
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - GIN_MODE=release
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=petboarding
+      - DB_PASSWORD=petboarding123
+      - DB_NAME=petboarding
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - KAFKA_BROKERS=kafka:9092
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+      - consul
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    volumes:
+      - ./logs/user-service:/var/log/petboarding/user-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  pet-service:
+    build:
+      context: ./services/pet-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - PORT=8082
+      - GIN_MODE=release
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=petboarding
+      - DB_PASSWORD=petboarding123
+      - DB_NAME=petboarding
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - KAFKA_BROKERS=kafka:9092
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+      - consul
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    volumes:
+      - ./logs/pet-service:/var/log/petboarding/pet-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  boarding-service:
+    build:
+      context: ./services/boarding-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - PORT=8083
+      - GIN_MODE=release
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=petboarding
+      - DB_PASSWORD=petboarding123
+      - DB_NAME=petboarding
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - KAFKA_BROKERS=kafka:9092
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+      - consul
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    volumes:
+      - ./logs/boarding-service:/var/log/petboarding/boarding-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  review-service:
+    build:
+      context: ./services/review-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    environment:
+      - PORT=8084
+      - GIN_MODE=release
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=petboarding
+      - DB_PASSWORD=petboarding123
+      - DB_NAME=petboarding
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - KAFKA_BROKERS=kafka:9092
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+      - consul
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    volumes:
+      - ./logs/review-service:/var/log/petboarding/review-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+    environment:
+      - PORT=8085
+      - GIN_MODE=release
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=petboarding
+      - DB_PASSWORD=petboarding123
+      - DB_NAME=petboarding
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - KAFKA_BROKERS=kafka:9092
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+      - consul
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    volumes:
+      - ./logs/notification-service:/var/log/petboarding/notification-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  admin-service:
+    build:
+      context: ./services/admin-service
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8086"
+    environment:
+      - PORT=8086
+      - GIN_MODE=release
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=petboarding
+      - DB_PASSWORD=petboarding123
+      - DB_NAME=petboarding
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - KAFKA_BROKERS=kafka:9092
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+      - consul
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    volumes:
+      - ./logs/admin-service:/var/log/petboarding/admin-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - GIN_MODE=release
+      - USER_SERVICE_URL=http://user-service:8081
+      - PET_SERVICE_URL=http://pet-service:8082
+      - BOARDING_SERVICE_URL=http://boarding-service:8083
+      - REVIEW_SERVICE_URL=http://review-service:8084
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8085
+      - ADMIN_SERVICE_URL=http://admin-service:8086
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - user-service
+      - pet-service
+      - boarding-service
+      - review-service
+      - notification-service
+      - admin-service
+      - redis
+      - consul
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    volumes:
+      - ./logs/api-gateway:/var/log/petboarding/api-gateway
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 数据库
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=petboarding
+      - MYSQL_USER=petboarding
+      - MYSQL_PASSWORD=petboarding123
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./scripts/db_init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot123"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 缓存
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./scripts/redis_config.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # 消息队列
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    ports:
+      - "2181:2181"
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-logs:/var/lib/zookeeper/log
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    depends_on:
+      - zookeeper
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  kafka-setup:
+    image: confluentinc/cp-kafka:7.0.1
+    volumes:
+      - ./scripts/kafka_setup.sh:/scripts/kafka_setup.sh
+    command: ["/bin/bash", "/scripts/kafka_setup.sh"]
+    depends_on:
+      - kafka
+    networks:
+      - petboarding-network
+    restart: on-failure
+
+  # 服务发现
+  consul:
+    image: hashicorp/consul:1.11
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    volumes:
+      - consul-data:/consul/data
+      - ./scripts/consul.json:/consul/config/consul.json
+    command: ["agent", "-config-file=/consul/config/consul.json"]
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "consul", "members"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # 日志和监控
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+      - ./scripts/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.14.0
+    ports:
+      - "5044:5044"
+      - "5000:5000"
+    environment:
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+    volumes:
+      - ./scripts/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - elasticsearch
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9600"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.14.0
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    volumes:
+      - ./scripts/kibana.yml:/usr/share/kibana/config/kibana.yml
+    depends_on:
+      - elasticsearch
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5601"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.14.0
+    volumes:
+      - ./scripts/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./logs:/var/log/petboarding:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - elasticsearch
+      - logstash
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    user: root
+
+  prometheus:
+    image: prom/prometheus:v2.30.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus-data:/prometheus
+      - ./scripts/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  grafana:
+    image: grafana/grafana:8.2.0
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # 前端（未来计划）
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  petboarding-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  redis-data:
+  zookeeper-data:
+  zookeeper-logs:
+  kafka-data:
+  consul-data:
+  elasticsearch-data:
+  prometheus-data:
+  grafana-data:

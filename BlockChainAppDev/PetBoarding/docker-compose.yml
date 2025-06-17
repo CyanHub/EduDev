@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  # User Service
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SERVICE_NAME=user-service
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+
+  # Pet Service
+  pet-service:
+    build:
+      context: ./services/pet-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - SERVICE_NAME=pet-service
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+
+  # Boarding Service
+  boarding-service:
+    build:
+      context: ./services/boarding-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - SERVICE_NAME=boarding-service
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+
+  # Review Service
+  review-service:
+    build:
+      context: ./services/review-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    environment:
+      - SERVICE_NAME=review-service
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+    environment:
+      - SERVICE_NAME=notification-service
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+
+  # Admin Service
+  admin-service:
+    build:
+      context: ./services/admin-service
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8086"
+    environment:
+      - SERVICE_NAME=admin-service
+    networks:
+      - petboarding-network
+    restart: unless-stopped
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVICE_NAME=api-gateway
+      - USER_SERVICE_URL=http://user-service:8081
+      - PET_SERVICE_URL=http://pet-service:8082
+      - BOARDING_SERVICE_URL=http://boarding-service:8083
+      - REVIEW_SERVICE_URL=http://review-service:8084
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8085
+      - ADMIN_SERVICE_URL=http://admin-service:8086
+    networks:
+      - petboarding-network
+    depends_on:
+      - user-service
+      - pet-service
+      - boarding-service
+      - review-service
+      - notification-service
+      - admin-service
+    restart: unless-stopped
+
+networks:
+  petboarding-network:
+    driver: bridge

@@ -1,0 +1,155 @@
+# 宠物寄养系统Filebeat配置文件
+
+# ============================== Filebeat inputs ===============================
+filebeat.inputs:
+# 用户服务日志
+- type: log
+  enabled: true
+  paths:
+    - /var/log/petboarding/user-service/*.log
+  fields:
+    service_name: user-service
+  fields_under_root: true
+  multiline:
+    pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'  # 匹配日期开头的行作为新日志的开始
+    negate: true
+    match: after
+
+# 宠物服务日志
+- type: log
+  enabled: true
+  paths:
+    - /var/log/petboarding/pet-service/*.log
+  fields:
+    service_name: pet-service
+  fields_under_root: true
+  multiline:
+    pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
+    negate: true
+    match: after
+
+# 寄养服务日志
+- type: log
+  enabled: true
+  paths:
+    - /var/log/petboarding/boarding-service/*.log
+  fields:
+    service_name: boarding-service
+  fields_under_root: true
+  multiline:
+    pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
+    negate: true
+    match: after
+
+# 评价服务日志
+- type: log
+  enabled: true
+  paths:
+    - /var/log/petboarding/review-service/*.log
+  fields:
+    service_name: review-service
+  fields_under_root: true
+  multiline:
+    pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
+    negate: true
+    match: after
+
+# 通知服务日志
+- type: log
+  enabled: true
+  paths:
+    - /var/log/petboarding/notification-service/*.log
+  fields:
+    service_name: notification-service
+  fields_under_root: true
+  multiline:
+    pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
+    negate: true
+    match: after
+
+# 管理员服务日志
+- type: log
+  enabled: true
+  paths:
+    - /var/log/petboarding/admin-service/*.log
+  fields:
+    service_name: admin-service
+  fields_under_root: true
+  multiline:
+    pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
+    negate: true
+    match: after
+
+# API网关日志
+- type: log
+  enabled: true
+  paths:
+    - /var/log/petboarding/api-gateway/*.log
+  fields:
+    service_name: api-gateway
+  fields_under_root: true
+  multiline:
+    pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
+    negate: true
+    match: after
+
+# 系统日志
+- type: log
+  enabled: true
+  paths:
+    - /var/log/syslog
+    - /var/log/messages
+  fields:
+    service_name: system
+  fields_under_root: true
+
+# Docker日志
+- type: container
+  enabled: true
+  paths:
+    - /var/lib/docker/containers/*/*.log
+  json.keys_under_root: true
+  json.add_error_key: true
+  json.message_key: log
+
+# ============================== Filebeat modules ==============================
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: true
+
+# ======================= Elasticsearch template settings =======================
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 0
+
+# ================================== Outputs ===================================
+# 输出到Logstash
+output.logstash:
+  hosts: ["logstash:5044"]
+  loadbalance: true
+  ssl.enabled: false
+
+# 输出到Elasticsearch（备用）
+#output.elasticsearch:
+#  hosts: ["elasticsearch:9200"]
+#  index: "filebeat-%{[service_name]}-%{+yyyy.MM.dd}"
+
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+
+# ================================== Logging ===================================
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+
+# ================================= Migration ==================================
+migration.6_to_7.enabled: true
