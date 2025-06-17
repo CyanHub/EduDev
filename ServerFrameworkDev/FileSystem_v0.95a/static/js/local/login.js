@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 防抖函数
     function debounce(func, delay) {
         let timer = null;
-        return function () {
+        return function() {
             const context = this;
             const args = arguments;
             clearTimeout(timer);

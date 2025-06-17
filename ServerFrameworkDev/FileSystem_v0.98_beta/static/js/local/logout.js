@@ -1,4 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * 登出功能
+ */
+const logoutButton = document.getElementById('logout-button');
+
+logoutButton.addEventListener('click', () => {
     const logoutProgress = document.getElementById('logout-progress');
     let progress = 0;
     const interval = setInterval(() => {

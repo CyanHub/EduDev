@@ -281,7 +281,7 @@ async function uploadFiles() {
 // 模拟 logout 函数
 async function logout() {
     try {
-        const response = await fetch('/api/auth/logout', {
+        const response = await fetch('/api/user/logout', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
