@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/cyanhub/petboarding/services/boarding-service/internal/model"
 	"github.com/cyanhub/petboarding/services/boarding-service/internal/service"
