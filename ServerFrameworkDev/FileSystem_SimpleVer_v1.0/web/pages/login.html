@@ -30,8 +30,16 @@
                                 <label for="password" class="form-label">密码:</label>
                                 <input type="password" id="password" name="password" class="form-control" required>
                             </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="isAdmin">
+                                <label class="form-check-label" for="isAdmin">我是管理者</label>
+                            </div>
                             <button type="submit" class="btn btn-primary w-100">登录</button>
                         </form>
+                        <!-- 添加跳转按钮 -->
+                        <button type="button" class="btn btn-secondary w-100 mt-3" onclick="window.location.href='register.html'">没有账号？去注册</button>
+                        <button type="button" class="btn btn-primary w-100 mt-3" onclick="window.location.href='upload.html'">去上传文件</button>
+                        <button type="button" class="btn btn-info w-100 mt-3" onclick="window.location.href='download.html'">去下载文件</button>
                     </div>
                 </div>
             </div>

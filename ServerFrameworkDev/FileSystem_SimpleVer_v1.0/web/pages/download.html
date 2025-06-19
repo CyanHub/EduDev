@@ -28,6 +28,26 @@
                             </div>
                             <button type="submit" class="btn btn-primary w-100">下载</button>
                         </form>
+                        <!-- 添加文件列表 -->
+                        <!-- <h3 class="mt-4">文件列表</h3>
+                        <table class="table table-striped mt-3">
+                            <thead>
+                                <tr>
+                                    <th>文件ID</th>
+                                    <th>文件名</th>
+                                    <th>上传者</th>
+                                    <th>上传时间</th>
+                                    <th>是否公开</th>
+                                </tr>
+                            </thead>
+                            <tbody id="filesList"> -->
+                                <!-- 文件信息将通过 JavaScript 动态填充 -->
+                            </tbody>
+                        </table>
+                        <!-- 添加跳转按钮 -->
+                        <button type="button" class="btn btn-secondary w-100 mt-3" onclick="window.location.href='upload.html'">去上传文件</button>
+                        <button type="button" class="btn btn-primary w-100 mt-3" onclick="window.location.href='admin.html'">去管理页面</button>
+                        <button type="button" class="btn btn-danger w-100 mt-3" onclick="logout()">登出并返回登录页面</button>
                     </div>
                 </div>
             </div>
@@ -38,6 +58,14 @@
     <!-- 引入 SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
     <script src="../static/js/download.js"></script>
+    <script>
+        function logout() {
+            // 清除本地存储的 token
+            localStorage.removeItem('token');
+            // 重定向到登录页面
+            window.location.href = 'login.html';
+        }
+    </script>
 </body>
 
 </html>

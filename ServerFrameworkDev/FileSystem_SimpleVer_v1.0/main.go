@@ -62,12 +62,25 @@ func main() {
 	})
 
 	// 注册路由
-	r.POST("/register", handlers.RegisterUser)
-	r.POST("/login", handlers.LoginUser)
-	r.POST("/upload", handlers.UploadFile)
-	r.GET("/download/:id", handlers.DownloadFile)
-	r.POST("/roles", handlers.CreateRole)
-	r.POST("/permissions", handlers.CreatePermission)
+	r.POST("/register", handlers.RegisterUser)                   // 注册用户
+	r.POST("/login", handlers.LoginUser)                         // 登录用户
+	r.POST("/upload", handlers.UploadFile)                       // 上传文件
+	r.GET("/download/:id", handlers.DownloadFile)                // 下载文件
+	r.GET("/files", handlers.GetFiles)                           // 获取文件列表
+	r.GET("/check-file-name", handlers.CheckFileName)            // 检查文件名是否存在
+	r.POST("/roles", handlers.CreateRole)                        // 创建角色
+	r.POST("/permissions", handlers.CreatePermission)            // 创建权限
+	r.GET("/check-admin", handlers.CheckAdmin)                   // 检查管理员权限
+	r.GET("/users", handlers.GetUsers)                           // 获取用户列表
+	r.GET("/roles", handlers.GetRoles)                           // 获取角色列表
+	r.GET("/permissions", handlers.GetPermissions)               // 获取权限列表
+	r.POST("/user-roles", handlers.AssignRoleToUser)             // 分配角色给用户
+	r.POST("/role-permissions", handlers.AssignPermissionToRole) // 分配权限给角色
+	r.DELETE("/users/:id", handlers.DeleteUser)                  // 删除用户
+	r.DELETE("/roles/:id", handlers.DeleteRole)                  // 删除角色
+	r.DELETE("/permissions/:id", handlers.DeletePermission)      // 删除权限
+	r.POST("/add-admin", handlers.AddAdmin)                      // 新增管理者添加路由
+	r.POST("/reset-password", handlers.ResetPassword)            // 重置密码接口
 
 	// 启动服务器
 	if err := r.Run(":" + strconv.Itoa(cfg.Server.Port)); err != nil {

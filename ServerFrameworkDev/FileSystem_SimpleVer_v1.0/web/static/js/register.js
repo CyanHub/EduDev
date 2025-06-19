@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // 初始化提示框
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
     const registerForm = document.getElementById('registerForm');
 
     registerForm.addEventListener('submit', function (e) {
