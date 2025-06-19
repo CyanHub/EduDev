@@ -1,0 +1,22 @@
+# 数据库配置文件
+# 数据库配置
+
+driver: mysql
+host: 127.0.0.1
+port: 3306
+database: PetBoarding
+username: root
+password: 123456
+charset: utf8mb4
+parseTime: true
+loc: Local
+max_open_conns: 100
+max_idle_conns: 20
+conn_max_lifetime: 10h
+
+# 分表路由配置
+sharding:
+  order:
+    table_count: 8
+    shard_key: user_id
+    algorithm: mod
