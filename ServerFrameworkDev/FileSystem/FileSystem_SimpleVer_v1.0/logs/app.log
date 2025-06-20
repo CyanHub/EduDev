@@ -1,0 +1,91 @@
+{"level":"fatal","ts":"2025-06-17T01:24:26.677+0800","caller":"FileSystem/main.go:28","msg":"Failed to connect to database","error":"Error 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)"}
+{"level":"fatal","ts":"2025-06-17T01:24:50.170+0800","caller":"FileSystem/main.go:33","msg":"Failed to migrate database","error":"Error 1265 (01000): Data truncated for column 'code' at row 1"}
+{"level":"fatal","ts":"2025-06-17T01:28:43.838+0800","caller":"FileSystem/main.go:33","msg":"Failed to migrate database","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[]' at line 1"}
+{"level":"info","ts":"2025-06-17T01:36:45.748+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"register"}
+{"level":"info","ts":"2025-06-17T01:48:13.914+0800","caller":"logging/logger.go:41","msg":"user action","user_id":2,"action":"register"}
+{"level":"info","ts":"2025-06-17T01:48:24.018+0800","caller":"handlers/handlers.go:66","msg":"Received login request","username":"testuser02","password":"Test@12345"}
+{"level":"info","ts":"2025-06-17T01:48:24.841+0800","caller":"logging/logger.go:41","msg":"user action","user_id":2,"action":"login"}
+{"level":"info","ts":"2025-06-17T02:10:40.111+0800","caller":"logging/logger.go:41","msg":"user action","user_id":2,"action":"download file"}
+{"level":"fatal","ts":"2025-06-17T09:38:28.763+0800","caller":"FileSystem_SimpleVer/main.go:28","msg":"Failed to connect to database","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"fatal","ts":"2025-06-17T09:39:04.561+0800","caller":"FileSystem_SimpleVer/main.go:28","msg":"Failed to connect to database","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"fatal","ts":"2025-06-17T09:39:43.961+0800","caller":"FileSystem_SimpleVer/main.go:28","msg":"Failed to connect to database","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"fatal","ts":"2025-06-17T09:39:52.222+0800","caller":"FileSystem_SimpleVer/main.go:28","msg":"Failed to connect to database","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"fatal","ts":"2025-06-17T09:41:21.018+0800","caller":"FileSystem_SimpleVer/main.go:28","msg":"Failed to connect to database","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"fatal","ts":"2025-06-17T09:42:26.319+0800","caller":"FileSystem_SimpleVer/main.go:28","msg":"Failed to connect to database","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"fatal","ts":"2025-06-17T09:51:38.558+0800","caller":"FileSystem_SimpleVer/main.go:28","msg":"Failed to connect to database","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"fatal","ts":"2025-06-17T10:21:45.166+0800","caller":"FileSystem_SimpleVer/main.go:29","msg":"连接数据库失败","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"fatal","ts":"2025-06-17T10:21:50.021+0800","caller":"FileSystem_SimpleVer/main.go:29","msg":"连接数据库失败","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"fatal","ts":"2025-06-17T10:22:13.835+0800","caller":"FileSystem_SimpleVer/main.go:29","msg":"连接数据库失败","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"fatal","ts":"2025-06-17T10:22:41.768+0800","caller":"FileSystem_SimpleVer/main.go:29","msg":"连接数据库失败","error":"Error 1049 (42000): Unknown database 'file_system'"}
+{"level":"info","ts":"2025-06-17T10:34:21.459+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"register"}
+{"level":"info","ts":"2025-06-17T10:34:39.713+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"testuser01","password":"Test@12345"}
+{"level":"info","ts":"2025-06-17T10:34:40.536+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-17T11:12:53.649+0800","caller":"logging/logger.go:41","msg":"user action","user_id":2,"action":"register"}
+{"level":"info","ts":"2025-06-17T11:26:14.583+0800","caller":"logging/logger.go:41","msg":"user action","user_id":3,"action":"register"}
+{"level":"info","ts":"2025-06-17T11:27:57.664+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"nahida3000","password":"@Nahida3000"}
+{"level":"info","ts":"2025-06-17T11:27:58.420+0800","caller":"logging/logger.go:41","msg":"user action","user_id":3,"action":"login"}
+{"level":"info","ts":"2025-06-17T11:31:18.443+0800","caller":"logging/logger.go:41","msg":"user action","user_id":3,"action":"download file"}
+{"level":"info","ts":"2025-06-17T12:39:13.154+0800","caller":"logging/logger.go:41","msg":"user action","user_id":3,"action":"register"}
+{"level":"info","ts":"2025-06-17T12:52:27.989+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"register"}
+{"level":"info","ts":"2025-06-17T12:53:28.848+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"viper1879","password":"@Viper1879"}
+{"level":"info","ts":"2025-06-17T12:53:29.686+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"login"}
+{"level":"info","ts":"2025-06-17T12:55:51.254+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"download file"}
+{"level":"info","ts":"2025-06-17T13:01:21.102+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"zooker1978","password":"@Zooker1978"}
+{"level":"info","ts":"2025-06-17T13:01:21.925+0800","caller":"logging/logger.go:41","msg":"user action","user_id":3,"action":"login"}
+{"level":"info","ts":"2025-06-19T21:05:29.204+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"zooker1978","password":"@Zooker19781"}
+{"level":"info","ts":"2025-06-19T21:05:40.725+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"zooker1978","password":"@Zooker1978"}
+{"level":"info","ts":"2025-06-19T21:05:41.549+0800","caller":"logging/logger.go:41","msg":"user action","user_id":3,"action":"login"}
+{"level":"info","ts":"2025-06-19T23:02:04.380+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"Test@12345"}
+{"level":"info","ts":"2025-06-19T23:10:57.369+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"Test@123456"}
+{"level":"info","ts":"2025-06-19T23:11:05.649+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"Test@12345"}
+{"level":"info","ts":"2025-06-19T23:11:37.695+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"Test@1234"}
+{"level":"info","ts":"2025-06-19T23:12:02.763+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"Test@12345"}
+{"level":"info","ts":"2025-06-19T23:23:25.292+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"Test@1234"}
+{"level":"info","ts":"2025-06-19T23:23:26.140+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-19T23:27:33.296+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-19T23:27:34.141+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T00:16:40.690+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-20T00:16:41.525+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T00:29:21.036+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-20T00:29:21.898+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T00:39:21.278+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-20T00:39:22.145+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T00:57:22.269+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-20T00:57:23.105+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T01:01:19.644+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-20T01:01:20.540+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T01:08:12.416+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-20T01:08:13.252+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T01:17:11.351+0800","caller":"logging/logger.go:41","msg":"user action","user_id":7,"action":"admin_register"}
+{"level":"info","ts":"2025-06-20T01:26:09.261+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-20T01:26:10.099+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T01:36:35.221+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-20T01:36:36.056+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T02:08:56.844+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"zooker1978","password":"@Zooker1978"}
+{"level":"info","ts":"2025-06-20T02:08:57.681+0800","caller":"logging/logger.go:41","msg":"user action","user_id":3,"action":"login"}
+{"level":"info","ts":"2025-06-20T02:09:01.049+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"zooker1978","password":"@Zooker1978"}
+{"level":"info","ts":"2025-06-20T02:09:01.879+0800","caller":"logging/logger.go:41","msg":"user action","user_id":3,"action":"login"}
+{"level":"info","ts":"2025-06-20T02:19:02.736+0800","caller":"logging/logger.go:41","msg":"user action","user_id":8,"action":"register"}
+{"level":"info","ts":"2025-06-20T02:19:35.447+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin008","password":"File@admin008"}
+{"level":"info","ts":"2025-06-20T02:19:36.293+0800","caller":"logging/logger.go:41","msg":"user action","user_id":7,"action":"login"}
+{"level":"info","ts":"2025-06-20T02:19:54.274+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader008","password":"File@Uploader008"}
+{"level":"info","ts":"2025-06-20T02:19:55.107+0800","caller":"logging/logger.go:41","msg":"user action","user_id":8,"action":"login"}
+{"level":"info","ts":"2025-06-20T02:31:36.863+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader008","password":"File@Uploader008"}
+{"level":"info","ts":"2025-06-20T02:31:37.692+0800","caller":"logging/logger.go:41","msg":"user action","user_id":8,"action":"login"}
+{"level":"info","ts":"2025-06-20T02:43:33.712+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader008","password":"File@Uploader008"}
+{"level":"info","ts":"2025-06-20T02:43:34.549+0800","caller":"logging/logger.go:41","msg":"user action","user_id":8,"action":"login"}
+{"level":"info","ts":"2025-06-20T02:44:39.581+0800","caller":"logging/logger.go:41","msg":"user action","user_id":9,"action":"register"}
+{"level":"info","ts":"2025-06-20T02:44:53.874+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader009","password":"File@Uploader009"}
+{"level":"info","ts":"2025-06-20T02:44:54.704+0800","caller":"logging/logger.go:41","msg":"user action","user_id":9,"action":"login"}
+{"level":"info","ts":"2025-06-20T02:45:12.243+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader009","password":"File@Uploader009"}
+{"level":"info","ts":"2025-06-20T02:45:13.068+0800","caller":"logging/logger.go:41","msg":"user action","user_id":9,"action":"login"}
+{"level":"info","ts":"2025-06-20T02:46:07.022+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-20T02:46:07.909+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T02:46:24.253+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader009","password":"File@Uploader009"}
+{"level":"info","ts":"2025-06-20T02:46:25.083+0800","caller":"logging/logger.go:41","msg":"user action","user_id":9,"action":"login"}
+{"level":"info","ts":"2025-06-20T03:00:46.047+0800","caller":"logging/logger.go:41","msg":"user action","user_id":10,"action":"register"}
+{"level":"info","ts":"2025-06-20T03:01:09.438+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin008","password":"File@admin008"}
+{"level":"info","ts":"2025-06-20T03:01:10.266+0800","caller":"logging/logger.go:41","msg":"user action","user_id":7,"action":"login"}
+{"level":"info","ts":"2025-06-20T03:02:06.960+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest01","password":"File@Guest01"}
+{"level":"info","ts":"2025-06-20T03:03:31.238+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin007","password":"File@admin007"}
+{"level":"info","ts":"2025-06-20T03:03:32.066+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}

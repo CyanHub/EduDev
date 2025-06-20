@@ -1,0 +1,52 @@
+{"level":"info","ts":"2025-06-20T05:03:25.835+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"register"}
+{"level":"info","ts":"2025-06-20T05:03:44.947+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader001","password":"File@Uploader001"}
+{"level":"info","ts":"2025-06-20T05:03:45.819+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"login"}
+{"level":"info","ts":"2025-06-20T05:03:52.130+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader001","password":"File@Uploader001"}
+{"level":"info","ts":"2025-06-20T05:03:53.003+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"login"}
+{"level":"info","ts":"2025-06-20T05:04:19.716+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin001","password":"File@Admin001"}
+{"level":"info","ts":"2025-06-20T05:04:20.596+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T05:06:30.984+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader001","password":"File@Uploader001"}
+{"level":"info","ts":"2025-06-20T05:06:31.860+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"login"}
+{"level":"info","ts":"2025-06-20T05:06:54.062+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"download file"}
+{"level":"info","ts":"2025-06-20T05:18:20.596+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"register"}
+{"level":"info","ts":"2025-06-20T05:18:46.218+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest01","password":"File@Guest01"}
+{"level":"info","ts":"2025-06-20T05:19:36.019+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest001","password":"File@Guest01"}
+{"level":"info","ts":"2025-06-20T05:19:47.069+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest001","password":"File@Guest001"}
+{"level":"info","ts":"2025-06-20T05:19:48.159+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"login"}
+{"level":"info","ts":"2025-06-20T05:20:12.998+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"download file"}
+{"level":"info","ts":"2025-06-20T05:20:27.317+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader001","password":"File@Uploader001"}
+{"level":"info","ts":"2025-06-20T05:20:28.409+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"login"}
+{"level":"info","ts":"2025-06-20T05:21:10.329+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin001","password":"File@Admin001"}
+{"level":"info","ts":"2025-06-20T05:21:11.410+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T05:21:47.381+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader001","password":"File@Uploader001"}
+{"level":"info","ts":"2025-06-20T05:21:48.488+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"login"}
+{"level":"info","ts":"2025-06-20T05:23:12.267+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest001","password":"File@Guest001"}
+{"level":"info","ts":"2025-06-20T05:23:13.347+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"login"}
+{"level":"info","ts":"2025-06-20T05:23:56.474+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"download file"}
+{"level":"info","ts":"2025-06-20T05:27:14.932+0800","caller":"logging/logger.go:41","msg":"user action","user_id":6,"action":"register"}
+{"level":"info","ts":"2025-06-20T05:27:20.562+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest002","password":"File@Guest002"}
+{"level":"info","ts":"2025-06-20T05:27:21.678+0800","caller":"logging/logger.go:41","msg":"user action","user_id":6,"action":"login"}
+{"level":"info","ts":"2025-06-20T14:12:50.118+0800","caller":"logging/logger.go:41","msg":"user action","user_id":7,"action":"register"}
+{"level":"info","ts":"2025-06-20T14:13:24.341+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin001","password":"File@Admin001"}
+{"level":"info","ts":"2025-06-20T14:13:25.228+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T14:14:28.615+0800","caller":"logging/logger.go:41","msg":"user action","user_id":8,"action":"admin_register"}
+{"level":"info","ts":"2025-06-20T14:15:24.099+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest002","password":"File@Guest002"}
+{"level":"info","ts":"2025-06-20T15:00:34.834+0800","caller":"logging/logger.go:41","msg":"user action","user_id":9,"action":"register"}
+{"level":"info","ts":"2025-06-20T15:03:07.481+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin001","password":"File@Admin001"}
+{"level":"info","ts":"2025-06-20T15:03:09.906+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T15:03:24.828+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin001","password":"File@Admin001"}
+{"level":"info","ts":"2025-06-20T15:03:27.232+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T15:04:52.745+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest002","password":"File@Guest002"}
+{"level":"info","ts":"2025-06-20T15:05:01.265+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin001","password":"File@Admin001"}
+{"level":"info","ts":"2025-06-20T15:05:03.258+0800","caller":"logging/logger.go:41","msg":"user action","user_id":1,"action":"login"}
+{"level":"info","ts":"2025-06-20T15:05:48.491+0800","caller":"logging/logger.go:41","msg":"user action","user_id":10,"action":"admin_register"}
+{"level":"info","ts":"2025-06-20T15:06:21.410+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"uploader001","password":"File@Uploader001"}
+{"level":"info","ts":"2025-06-20T15:06:23.823+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"login"}
+{"level":"info","ts":"2025-06-20T15:07:48.839+0800","caller":"logging/logger.go:41","msg":"user action","user_id":4,"action":"download file"}
+{"level":"info","ts":"2025-06-20T15:07:59.452+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest001","password":"File@Guest001"}
+{"level":"info","ts":"2025-06-20T15:08:01.803+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"login"}
+{"level":"info","ts":"2025-06-20T15:09:56.799+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest001","password":"File@Guest001"}
+{"level":"info","ts":"2025-06-20T15:09:59.230+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"login"}
+{"level":"info","ts":"2025-06-20T15:10:05.374+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest001","password":"File@Guest001"}
+{"level":"info","ts":"2025-06-20T15:10:07.423+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"login"}
+{"level":"info","ts":"2025-06-20T15:10:17.610+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"download file"}

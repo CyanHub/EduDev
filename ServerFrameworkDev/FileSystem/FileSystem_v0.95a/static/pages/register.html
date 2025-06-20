@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- 头部样式保持不变 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 添加 favicon 链接 -->
+    <link rel="icon" href="../images/icon/DocumentsIcon.png" type="image/png">
+    <title>注册 - 文档管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="../css/local/register.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- HTML主体结构保持不变 -->
+    <div class="register-container">
+        <!-- 头部和表单结构保持不变 -->
+        <div class="register-header">
+            <i class="bi bi-person-plus-fill"></i>
+            <h2>用户注册</h2>
+            <p class="text-muted">创建您的账号</p>
+        </div>
+
+        <div class="avatar-upload">
+            <div class="avatar-preview" id="avatarPreview">
+                <i class="bi bi-camera"></i>
+                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+            </div>
+            <small class="text-muted">点击上传头像</small>
+        </div>
+
+        <form id="register-form" enctype="multipart/form-data">
+            <!-- 表单字段保持不变 -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="username" class="form-label">用户名</label>
+                    <input type="text" class="form-control" id="username" placeholder="请输入用户名" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="nickname" class="form-label">昵称</label>
+                    <input type="text" class="form-control" id="nickname" placeholder="请输入昵称">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="password" class="form-label">密码</label>
+                    <input type="password" class="form-control" id="password" placeholder="请输入密码" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="confirm-password" class="form-label">确认密码</label>
+                    <input type="password" class="form-control" id="confirm-password" placeholder="请再次输入密码" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">邮箱</label>
+                <input type="email" class="form-control" id="email" placeholder="请输入邮箱" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">手机号</label>
+                <input type="tel" class="form-control" id="phone" placeholder="请输入手机号">
+            </div>
+
+            <div class="mb-3">
+                <label for="role" class="form-label">选择角色</label>
+                <select class="form-select" id="role" name="role" required>
+                    <option value="0" selected>未选择</option>
+                    <option value="1">管理员</option>
+                    <option value="2">普通用户</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 btn-register mb-3">
+                <i class="bi bi-person-plus me-2"></i>注册
+            </button>
+
+            <div class="text-center">
+                <a href="login.html" class="login-link">
+                    <i class="bi bi-box-arrow-in-right me-1"></i>已有账号？立即登录
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- 引入新的 JavaScript 文件 -->
+    <script src="../js/local/register.js"></script>
+</body>
+
+</html>
