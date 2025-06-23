@@ -50,3 +50,11 @@
 {"level":"info","ts":"2025-06-20T15:10:05.374+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"guest001","password":"File@Guest001"}
 {"level":"info","ts":"2025-06-20T15:10:07.423+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"login"}
 {"level":"info","ts":"2025-06-20T15:10:17.610+0800","caller":"logging/logger.go:41","msg":"user action","user_id":5,"action":"download file"}
+{"level":"info","ts":"2025-06-24T01:51:23.087+0800","caller":"logging/logger.go:41","msg":"user action","user_id":12,"action":"register"}
+{"level":"info","ts":"2025-06-24T01:51:33.957+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin001","password":"File@Admin001"}
+{"level":"info","ts":"2025-06-24T02:00:29.606+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"admin008","password":"File@admin008"}
+{"level":"info","ts":"2025-06-24T02:00:30.427+0800","caller":"logging/logger.go:41","msg":"user action","user_id":7,"action":"login"}
+{"level":"info","ts":"2025-06-24T02:00:59.114+0800","caller":"logging/logger.go:41","msg":"user action","user_id":7,"action":"download file"}
+{"level":"info","ts":"2025-06-24T02:02:01.572+0800","caller":"logging/logger.go:41","msg":"user action","user_id":7,"action":"download file"}
+{"level":"info","ts":"2025-06-24T02:02:21.402+0800","caller":"handlers/handlers.go:66","msg":"已接收登录请求","username":"royer2003","password":"File@Royer2003"}
+{"level":"info","ts":"2025-06-24T02:02:22.236+0800","caller":"logging/logger.go:41","msg":"user action","user_id":12,"action":"login"}
